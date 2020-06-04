@@ -33,8 +33,8 @@ const getAssetDatabaseByPath = async (databasePath, startTime) => {
     return axios.get(PIWEBAPISVR + databasePath)
         .then(function (response) {
 
-            piData.DATASOURCE_ID = response.data.id;
-            piData.DATASOURCE_DEVICETYPE = response.data.path;
+            piData.DATASOURCE_ID = response.data.Id;
+            piData.DATASOURCE_DEVICETYPE = response.data.Path;
             piData.LOGICALINTERFACE_ID = "None";
             piData.EVENTTYPE = "None";
             piData.FORMAT = "NA";
