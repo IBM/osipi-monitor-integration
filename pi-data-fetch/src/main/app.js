@@ -134,8 +134,8 @@ const getAttributeRecordedData = (attribute, startTime) => {
                 response.data.Items.forEach(element => {
                     point.VALUES.push({
                         "VALUE": element.Value ,
-                        "EVT_TIMESTAMP": element.Value,
-                        "UPDATED_UTC": element.Value,
+                        "EVT_TIMESTAMP": element.Timestamp,
+                        "UPDATED_UTC": element.Timestamp,
                         "UNITS_ABBREVIATION": element.UnitsAbbreviation
                     });
                 });
