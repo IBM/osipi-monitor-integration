@@ -1,6 +1,9 @@
 const axios = require('axios');
 const winston = require("winston");
 
+require("dotenv").config();
+process.env.NODE_TLS_REJECT_UNAUTHORIZED = "0";
+
 const logger = winston.createLogger({
   level: "debug",
   format: winston.format.combine(
@@ -11,25 +14,23 @@ const logger = winston.createLogger({
     winston.format.splat(),
     winston.format.json()
   ),
-  defaultMeta: { service: "your-service-name" },
+  defaultMeta: { service: "osi-pi-data" },
   transports: [
-    //
-    // - Write to all logs with level `info` and below to `quick-start-combined.log`.
-    // - Write all logs error (and below) to `quick-start-error.log`.
-    //
-    new winston.transports.File({ filename: "../logs/quick-start-error.log", level: "debug" }),
+    new winston.transports.File({
+      filename: process.env.LOG_LOCATION,
+      level: process.env.LOG_LEVEL,
+    }),
   ],
 });
 
 logger.debug('Running ...')
 
-process.env.NODE_TLS_REJECT_UNAUTHORIZED = "0";
 
-const PIWEBAPISVR = 'https://172.16.85.163/piwebapi';
-const PIDBPath = '/assetdatabases?path=\\\\MX7VM\\OSIDemo%20Oil%20%26%20Gas%20Well%20Downtime%20Tracking%20FULL';
-const APPCONNECT_POST_PATH = 'https://enaqdcuda2e5a.x.pipedream.net/';
-const STARTTIME = '-1H'
-const FILTER_ELEM_NAME = 'Well17'; // Use to filter a specific element ex 'Well32'
+const PIWEBAPISVR = process.env.PIWEBAPISVR;
+const PIDBPath = process.env.PIDBPath;
+const APPCONNECT_POST_PATH = process.env.APPCONNECT_POST_PATH;
+const STARTTIME = process.env.STARTTIME;
+const FILTER_ELEM_NAME = process.env.STARTTIME;
 
 var piData = new Object();
 var pipointData = new Array();
