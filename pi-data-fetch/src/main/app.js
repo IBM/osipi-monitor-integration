@@ -1,4 +1,27 @@
 const axios = require('axios');
+const winston = require("winston");
+
+const logger = winston.createLogger({
+  level: "debug",
+  format: winston.format.combine(
+    winston.format.timestamp({
+      format: "YYYY-MM-DD HH:mm:ss",
+    }),
+    winston.format.errors({ stack: true }),
+    winston.format.splat(),
+    winston.format.json()
+  ),
+  defaultMeta: { service: "your-service-name" },
+  transports: [
+    //
+    // - Write to all logs with level `info` and below to `quick-start-combined.log`.
+    // - Write all logs error (and below) to `quick-start-error.log`.
+    //
+    new winston.transports.File({ filename: "../logs/quick-start-error.log", level: "debug" }),
+  ],
+});
+
+logger.debug('Running ...')
 
 process.env.NODE_TLS_REJECT_UNAUTHORIZED = "0";
 
@@ -24,7 +47,7 @@ const getUpdatedPointData = async ( startTime) => {
         //console.log("success");
       })
       .catch(error => {
-        console.log(error)
+        logger.error(error);
       })
 }
 
@@ -46,7 +69,7 @@ const getAssetDatabaseByPath = async (databasePath, startTime) => {
         })
         .catch(function (error) {
             // handle error
-            console.error(error);
+            logger.error(error);
         });
 }
 
@@ -67,7 +90,7 @@ const  getElements = (assetDatabase, startTime) => {
         })
         .catch(function (error) {
             // handle error
-            console.log(error);
+            logger.error(error);
         });
 
 }
@@ -89,7 +112,7 @@ const getAttributes = (element, startTime) => {
         })
         .catch(function (error) {
             // handle error
-            console.log(error);
+            logger.error(error);
         });      
 }
 
@@ -146,7 +169,7 @@ const getAttributeRecordedData = (attribute, startTime) => {
         })
         .catch(function (error) {
             // handle error
-            console.log(error);
+            logger.error(error);
         });
 }
 
@@ -156,6 +179,7 @@ getUpdatedPointData(STARTTIME);
 const delay = t => new Promise(resolve => setTimeout(resolve, t));
 delay(5000).then(() => {
     piData.POINTS = pipointData;
+
     //console.log(piData);
     //console.log(JSON.stringify(pipointData))
     
