@@ -30,7 +30,7 @@ const PIWEBAPISVR = process.env.PIWEBAPISVR;
 const PIDBPath = process.env.PIDBPath;
 const APPCONNECT_POST_PATH = process.env.APPCONNECT_POST_PATH;
 const STARTTIME = process.env.STARTTIME;
-const FILTER_ELEM_NAME = process.env.STARTTIME;
+const FILTER_ELEM_NAME = process.env.FILTER_ELEM_NAME;
 
 var piData = new Object();
 var pipointData = new Array();
@@ -101,9 +101,13 @@ const getAttributes = (element, startTime) => {
 
     return axios.get(element.Links.Attributes)
         .then(function (response) {
+
+
+
             // handle success
             var arr = response.data.Items;
             arr.forEach(attribute => {
+                console.log(element.Name, FILTER_ELEM_NAME);
                 if (  (element.Name  === FILTER_ELEM_NAME && FILTER_ELEM_NAME != '') || 
                       (FILTER_ELEM_NAME === '') ) { // Use only if we want to filter a specific element
                    getAttributeRecordedData(attribute, startTime);
@@ -127,9 +131,10 @@ const getAttributeRecordedData = (attribute, startTime) => {
         delete attribute[tag];
     });
     */
-
+    console.log(startTime);
     return axios.get(pointDataURL  + "?startTime=" + startTime)
         .then(function (response) {
+            console.log(JSON.stringify(response))
             // handle success
 
             //console.log(response.data.Items);
@@ -156,6 +161,7 @@ const getAttributeRecordedData = (attribute, startTime) => {
 
                 point.VALUES = new Array();
                 response.data.Items.forEach(element => {
+                    console.log(element.Timestamp);
                     point.VALUES.push({
                         "VALUE": element.Value ,
                         "EVT_TIMESTAMP": element.Timestamp,
