@@ -101,19 +101,16 @@ const getAttributes = (element, startTime) => {
 
     return axios.get(element.Links.Attributes)
         .then(function (response) {
-
-
-
             // handle success
             var arr = response.data.Items;
             arr.forEach(attribute => {
-                console.log(element.Name, FILTER_ELEM_NAME);
+
                 if (  (element.Name  === FILTER_ELEM_NAME && FILTER_ELEM_NAME != '') || 
                       (FILTER_ELEM_NAME === '') ) { // Use only if we want to filter a specific element
                    getAttributeRecordedData(attribute, startTime);
                 }   
             });
-            //console.log(response.data.Items.Links);
+
         })
         .catch(function (error) {
             // handle error
@@ -131,10 +128,9 @@ const getAttributeRecordedData = (attribute, startTime) => {
         delete attribute[tag];
     });
     */
-    console.log(startTime);
     return axios.get(pointDataURL  + "?startTime=" + startTime)
         .then(function (response) {
-            console.log(JSON.stringify(response))
+
             // handle success
 
             //console.log(response.data.Items);
@@ -161,7 +157,7 @@ const getAttributeRecordedData = (attribute, startTime) => {
 
                 point.VALUES = new Array();
                 response.data.Items.forEach(element => {
-                    console.log(element.Timestamp);
+                    // console.log(element.Timestamp);
                     point.VALUES.push({
                         "VALUE": element.Value ,
                         "EVT_TIMESTAMP": element.Timestamp,
@@ -184,14 +180,19 @@ getUpdatedPointData(STARTTIME);
 
 // This is probably not the best way to handle this ... wait for the promise to return data from all URL calls
 const delay = t => new Promise(resolve => setTimeout(resolve, t));
+
 delay(5000).then(() => {
     piData.POINTS = pipointData;
-
-    //console.log(piData);
-    //console.log(JSON.stringify(pipointData))
     
-    axios.post(APPCONNECT_POST_PATH, {
-        pipoints: piData
-    })
+    axios
+      .post(APPCONNECT_POST_PATH, {
+        pipoints: piData,
+      })
+      .then(function (response) {
+        logger.info(response);
+      })
+      .catch(function (error) {
+        logger.error(error);
+      });
     
 });
