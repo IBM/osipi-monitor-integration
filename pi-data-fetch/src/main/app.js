@@ -122,7 +122,9 @@ const getAttributeRecordedData = (attribute, startTime) => {
   pointDataURL = attribute.Links.RecordedData;
 
   /*
-    var deleteTags = ['Links', 'IsConfigurationItem', 'IsExcluded', 'IsHidden', 'IsManualDataEntry', 'Step', 'TraitName', 'Span', 'Zero'];
+    var deleteTags = ['Links', 'IsConfigurationItem', 'IsExcluded', 'IsHidden', 
+
+'IsManualDataEntry', 'Step', 'TraitName', 'Span', 'Zero'];
     deleteTags.forEach ( function (tag) {
         delete attribute[tag];
     });
@@ -143,7 +145,7 @@ const getAttributeRecordedData = (attribute, startTime) => {
         point.DEVICEID = trimData(attribute.Id, 50);
         point.LOGICALINTERFACE_ID = trimData(attribute.WebId, 50);
         point.EVENTTYPE = "PIPOINT";
-        point.POINT_PATH = trimData(attribute.Path, 50);
+        point.POINT_PATH = getLabel(attribute.Path);
         point.FORMAT = "";
         point.UNITS = attribute.DefaultUnitsName;
         point.TYPE = trimData(attribute.Type, 50);
@@ -172,6 +174,15 @@ const getAttributeRecordedData = (attribute, startTime) => {
     });
 };
 
+const getLabel = (theString) => {
+  const index = theString.lastIndexOf('|');
+
+  if (index >= 0) {
+    return theString.slice((index + 1));
+  }
+  return theString;
+}
+
 const trimData = (theString, length) => {
   if (theString) {
     return theString.slice(0, (length - 1));
@@ -195,10 +206,11 @@ const delay = (t) => new Promise((resolve) => setTimeout(resolve, t));
 delay(5000).then(() => {
   piData.POINTS = pipointData;
 
+  console.log(JSON.stringify(piData));
+  // console.log(APPCONNECT_POST_PATH);
+
   axios
-    .post(APPCONNECT_POST_PATH, {
-      pipoints: piData,
-    })
+    .post(APPCONNECT_POST_PATH, piData)
     .then(function (response) {
       logger.info(JSON.stringify(piData));
       logger.info(response);
@@ -206,7 +218,9 @@ delay(5000).then(() => {
     })
     .catch(function (error) {
       logger.info(JSON.stringify(piData));
+
       logger.error(error);
       console.log("Error");
+    	console.log(error);
     });
 });
