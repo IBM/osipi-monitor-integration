@@ -117,3 +117,6 @@ dist
 .yarn/install-state.gz
 .pnp.*
 
+# OSX junk
+.DS_store
+.metals

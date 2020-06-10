@@ -1,4 +1,4 @@
-const axios = require('axios');
+const axios = require("axios");
 const winston = require("winston");
 
 require("dotenv").config();
@@ -23,8 +23,7 @@ const logger = winston.createLogger({
   ],
 });
 
-logger.debug('Running ...')
-
+logger.debug("Running ...");
 
 const PIWEBAPISVR = process.env.PIWEBAPISVR;
 const PIDBPath = process.env.PIDBPath;
@@ -38,161 +37,175 @@ var point;
 var now = new Date().toISOString();
 
 function setPiPointData(point) {
-   //console.log(pointData);
-   pipointData.push(point);
+  //console.log(pointData);
+  pipointData.push(point);
 }
 
-const getUpdatedPointData = async ( startTime) => {
-    getAssetDatabaseByPath(PIDBPath, startTime)
-    .then(response => {
-        //console.log("success");
-      })
-      .catch(error => {
-        logger.error(error);
-      })
-}
+const getUpdatedPointData = async (startTime) => {
+  getAssetDatabaseByPath(PIDBPath, startTime)
+    .then((response) => {
+      //console.log("success");
+    })
+    .catch((error) => {
+      logger.error(error);
+    });
+};
 
 const getAssetDatabaseByPath = async (databasePath, startTime) => {
+  return axios
+    .get(PIWEBAPISVR + databasePath)
+    .then(function (response) {
+      // console.log(response);
+      piData.PrimaryKey = trimData(response.data.WebId, 50);
+      piData.DATASOURCE_ID = trimData(response.data.Id, 50);
+      piData.DATASOURCE_DEVICETYPE = trimData(response.data.Path, 50);
+      piData.POINTS_DEVICETYPE = "POINTS";
+      piData.LOGICALINTERFACE_ID = "None";
+      piData.EVENTTYPE = "None";
+      piData.FORMAT = "NA";
+      piData.UPDATED_UTC = now;
+      piData.EVT_TIMESTAMP = now;
+      piData.STATUS = "1";
 
-    return axios.get(PIWEBAPISVR + databasePath)
-        .then(function (response) {
+      getElements(response.data, startTime);
+    })
+    .catch(function (error) {
+      // handle error
+      logger.error(error);
+    });
+};
 
-            piData.DATASOURCE_ID = response.data.Id;
-            piData.DATASOURCE_DEVICETYPE = response.data.Path;
-            piData.LOGICALINTERFACE_ID = "None";
-            piData.EVENTTYPE = "None";
-            piData.FORMAT = "NA";
-            piData.UPDATED_UTC = now;
-            piData.EVT_TIMESTAMP = now;
-            piData.STATUS = "1";
+const getElements = (assetDatabase, startTime) => {
+  return axios
+    .get(assetDatabase.Links.Elements)
+    .then(function (response) {
+      // handle success
+      var arr = response.data.Items;
 
-            getElements(response.data, startTime);
-        })
-        .catch(function (error) {
-            // handle error
-            logger.error(error);
-        });
-}
-
-const  getElements = (assetDatabase, startTime) => {
-
-    return axios.get(assetDatabase.Links.Elements)
-        .then(function (response) {
-            // handle success
-            var arr = response.data.Items;
-            
-            arr.forEach(element => {
-                if (element.HasChildren) {
-                    getElements(element, startTime);
-                } else {
-                    getAttributes(element, startTime)
-                }
-            });
-        })
-        .catch(function (error) {
-            // handle error
-            logger.error(error);
-        });
-
-}
-
+      arr.forEach((element) => {
+        if (element.HasChildren) {
+          getElements(element, startTime);
+        } else {
+          getAttributes(element, startTime);
+        }
+      });
+    })
+    .catch(function (error) {
+      // handle error
+      logger.error(error);
+    });
+};
 
 const getAttributes = (element, startTime) => {
-
-    return axios.get(element.Links.Attributes)
-        .then(function (response) {
-            // handle success
-            var arr = response.data.Items;
-            arr.forEach(attribute => {
-
-                if (  (element.Name  === FILTER_ELEM_NAME && FILTER_ELEM_NAME != '') || 
-                      (FILTER_ELEM_NAME === '') ) { // Use only if we want to filter a specific element
-                   getAttributeRecordedData(attribute, startTime);
-                }   
-            });
-
-        })
-        .catch(function (error) {
-            // handle error
-            logger.error(error);
-        });      
-}
+  return axios
+    .get(element.Links.Attributes)
+    .then(function (response) {
+      // handle success
+      var arr = response.data.Items;
+      arr.forEach((attribute) => {
+        if (
+          (element.Name === FILTER_ELEM_NAME && FILTER_ELEM_NAME != "") ||
+          FILTER_ELEM_NAME === ""
+        ) {
+          // Use only if we want to filter a specific element
+          getAttributeRecordedData(attribute, startTime);
+        }
+      });
+    })
+    .catch(function (error) {
+      // handle error
+      logger.error(error);
+    });
+};
 
 const getAttributeRecordedData = (attribute, startTime) => {
+  pointDataURL = attribute.Links.RecordedData;
 
-    pointDataURL = attribute.Links.RecordedData;
-
-    /*
+  /*
     var deleteTags = ['Links', 'IsConfigurationItem', 'IsExcluded', 'IsHidden', 'IsManualDataEntry', 'Step', 'TraitName', 'Span', 'Zero'];
     deleteTags.forEach ( function (tag) {
         delete attribute[tag];
     });
     */
-    return axios.get(pointDataURL  + "?startTime=" + startTime)
-        .then(function (response) {
+  return axios
+    .get(pointDataURL + "?startTime=" + startTime)
+    .then(function (response) {
+      // handle success
 
-            // handle success
+      //console.log(response.data.Items);
+      //attribute['Values'] = response.data.Items;
+      var hasPointData = response.data.Items.length > 0;
 
-            //console.log(response.data.Items);
-            //attribute['Values'] = response.data.Items;
-            var hasPointData = response.data.Items.length > 0;
+      // Only include points with data
+      if (hasPointData) {
+        point = new Object();
+        // Set PI POINT data attribute values
+        point.DEVICEID = trimData(attribute.Id, 50);
+        point.LOGICALINTERFACE_ID = trimData(attribute.WebId, 50);
+        point.EVENTTYPE = "PIPOINT";
+        point.POINT_PATH = trimData(attribute.Path, 50);
+        point.FORMAT = "";
+        point.UNITS = attribute.DefaultUnitsName;
+        point.TYPE = trimData(attribute.Type, 50);
+        point.DESCRIPTION = trimData(attribute.Description, 50);
+        point.LABEL = trimData(attribute.TypeQualifier, 50);
+        point.ASSET_NAME = trimData(attribute.Name, 50);
 
-            // Only include points with data
-            if (hasPointData) {
-
-
-                point = new Object()
-                // Set PI POINT data attribute values
-                point.DEVICEID = attribute.Id;
-                point.LOGICALINTERFACE_ID = attribute.WebId;
-                point.EVENTTYPE = "PIPOINT";
-                point.PATH = attribute.Path;
-                point.FORMAT = "";
-                point.UNITS = attribute.DefaultUnitsName;
-                point.TYPE = attribute.Type;
-                point.DESCRIPTION = attribute.Description;
-                point.LABEL = attribute.TypeQualifier;
-                point.ASSET_NAME = attribute.Name;
-
-
-                point.VALUES = new Array();
-                response.data.Items.forEach(element => {
-                    // console.log(element.Timestamp);
-                    point.VALUES.push({
-                        "VALUE": element.Value ,
-                        "EVT_TIMESTAMP": element.Timestamp,
-                        "UPDATED_UTC": element.Timestamp,
-                        "UNITS_ABBREVIATION": element.UnitsAbbreviation
-                    });
-                });
-
-                //cleaconsole.log(pipointData);
-                setPiPointData(point);
-            }
-        })
-        .catch(function (error) {
-            // handle error
-            logger.error(error);
+        point.VALUES = new Array();
+        response.data.Items.forEach((element) => {
+          // console.log(element.Timestamp);
+          point.VALUES.push({
+            VALUE: formatNumber(element.Value, 2),
+            EVT_TIMESTAMP: element.Timestamp,
+            UPDATED_UTC: element.Timestamp,
+            UNITS_ABBREVIATION: element.UnitsAbbreviation,
+          });
         });
+
+        //cleaconsole.log(pipointData);
+        setPiPointData(point);
+      }
+    })
+    .catch(function (error) {
+      // handle error
+      logger.error(error);
+    });
+};
+
+const trimData = (theString, length) => {
+  if (theString) {
+    return theString.slice(0, (length - 1));
+  }
+  return theString;
+};
+
+const formatNumber = (theNumber, decimalPlaces) => {
+  return Number(
+    Math.round(parseFloat(theNumber + "e" + decimalPlaces)) +
+      "e-" +
+      decimalPlaces
+  );
 }
 
 getUpdatedPointData(STARTTIME);
 
 // This is probably not the best way to handle this ... wait for the promise to return data from all URL calls
-const delay = t => new Promise(resolve => setTimeout(resolve, t));
+const delay = (t) => new Promise((resolve) => setTimeout(resolve, t));
 
 delay(5000).then(() => {
-    piData.POINTS = pipointData;
-    
-    axios
-      .post(APPCONNECT_POST_PATH, {
-        pipoints: piData,
-      })
-      .then(function (response) {
-        logger.info(response);
-      })
-      .catch(function (error) {
-        logger.error(error);
-      });
-    
+  piData.POINTS = pipointData;
+   console.log(JSON.stringify(piData));
+
+  axios
+    .post(APPCONNECT_POST_PATH, {
+      pipoints: piData,
+    })
+    .then(function (response) {
+      logger.info(JSON.stringify(piData));
+      logger.info(response);
+    })
+    .catch(function (error) {
+      logger.info(JSON.stringify(piData));
+      logger.error(error);
+    });
 });
