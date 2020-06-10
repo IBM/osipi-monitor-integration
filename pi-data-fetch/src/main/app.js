@@ -194,7 +194,6 @@ const delay = (t) => new Promise((resolve) => setTimeout(resolve, t));
 
 delay(5000).then(() => {
   piData.POINTS = pipointData;
-   console.log(JSON.stringify(piData));
 
   axios
     .post(APPCONNECT_POST_PATH, {
@@ -203,9 +202,11 @@ delay(5000).then(() => {
     .then(function (response) {
       logger.info(JSON.stringify(piData));
       logger.info(response);
+      console.log("Success");
     })
     .catch(function (error) {
       logger.info(JSON.stringify(piData));
       logger.error(error);
+      console.log("Error");
     });
 });
