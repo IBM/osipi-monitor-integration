@@ -1,5 +1,6 @@
 const axios = require("axios");
 const winston = require("winston");
+const RegexParser = require("regex-parser");
 
 require("dotenv").config();
 process.env.NODE_TLS_REJECT_UNAUTHORIZED = "0";
@@ -103,10 +104,11 @@ const getAttributes = (element, startTime) => {
       // handle success
       var arr = response.data.Items;
       arr.forEach((attribute) => {
-        if (
-          (element.Name === FILTER_ELEM_NAME && FILTER_ELEM_NAME != "") ||
-          FILTER_ELEM_NAME === ""
-        ) {
+        // if (
+        //   (element.Name === FILTER_ELEM_NAME && FILTER_ELEM_NAME != "") ||
+        //   FILTER_ELEM_NAME === "") 
+        if (useElement(element.Name))
+          {
           // Use only if we want to filter a specific element
           getAttributeRecordedData(attribute, startTime);
         }
@@ -117,6 +119,20 @@ const getAttributes = (element, startTime) => {
       logger.error(error);
     });
 };
+
+const useElement = (elementName) => {
+  
+  if (elementName) {
+    const regex = RegexParser(FILTER_ELEM_NAME); 
+    const returnValue = regex.test(elementName);
+    console.log("Element", elementName);
+    console.log("Expression", FILTER_ELEM_NAME);
+    console.log("Return", returnValue);
+    return returnValue;
+  }
+
+  return true; // if empty/null/etc we use it
+}
 
 const getAttributeRecordedData = (attribute, startTime) => {
   pointDataURL = attribute.Links.RecordedData;
