@@ -156,12 +156,14 @@ const getAttributeRecordedData = (attribute, startTime) => {
         point.VALUES = new Array();
         response.data.Items.forEach((element) => {
           // console.log(element.Timestamp);
-          point.VALUES.push({
-            VALUE: formatNumber(element.Value, 2),
-            EVT_TIMESTAMP: element.Timestamp,
-            UPDATED_UTC: element.Timestamp,
-            UNITS_ABBREVIATION: element.UnitsAbbreviation,
-          });
+          if (isANumber(element.Value)) {
+            point.VALUES.push({
+              VALUE: formatNumber(element.Value, 2),
+              EVT_TIMESTAMP: element.Timestamp,
+              UPDATED_UTC: element.Timestamp,
+              UNITS_ABBREVIATION: element.UnitsAbbreviation,
+            });
+          }
         });
 
         //cleaconsole.log(pipointData);
@@ -189,6 +191,13 @@ const trimData = (theString, length) => {
   }
   return theString;
 };
+
+const isANumber = (theNumber) => {
+  if (theNumber === null) {
+    return false;
+  }
+  return !isNaN(theNumber);
+}
 
 const formatNumber = (theNumber, decimalPlaces) => {
   console.log("start",theNumber);
