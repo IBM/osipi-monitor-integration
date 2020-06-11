@@ -191,12 +191,15 @@ const trimData = (theString, length) => {
 };
 
 const formatNumber = (theNumber, decimalPlaces) => {
-  return Number(
+  console.log("start",theNumber);
+  const roundedNumber = Number(
     Math.round(parseFloat(theNumber + "e" + decimalPlaces)) +
       "e-" +
       decimalPlaces
   );
-}
+  console.log(roundedNumber);
+  return roundedNumber;
+} 
 
 getUpdatedPointData(STARTTIME);
 
