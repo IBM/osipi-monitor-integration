@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<workingSetManager>
+<workingSet editPageId="com.ibm.etools.mft.navigator.BrokerWorkingSet.AppLib" factoryID="org.eclipse.ui.internal.WorkingSetFactory" id="1592254898724_1" label="[PISystemMaximoMonitorIntegraionApp]" name="[PISystemMaximoMonitorIntegraionApp]">
+<item factoryID="org.eclipse.ui.internal.model.ResourceFactory" path="/PISystemMaximoMonitorIntegraionApp" type="4"/>
+<item factoryID="org.eclipse.ui.internal.model.ResourceFactory" path="/Monitor-DB2" type="4"/>
+<item factoryID="org.eclipse.ui.internal.model.ResourceFactory" path="/MyPolicies" type="4"/>
+</workingSet>
+<workingSet aggregate="true" factoryID="org.eclipse.ui.internal.WorkingSetFactory" id="1592254663419_0" label="Window Working Set" name="Aggregate for window 1592254663418"/>
+</workingSetManager>

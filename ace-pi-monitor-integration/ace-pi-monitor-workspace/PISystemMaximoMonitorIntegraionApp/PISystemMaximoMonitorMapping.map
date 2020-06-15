@@ -1,0 +1,181 @@
+<?xml version="1.0" encoding="UTF-8"?><mappingRoot xmlns="http://www.ibm.com/2008/ccl/Mapping" domainID="com.ibm.msl.mapping.xml" domainIDExtension="mb" mainMap="true" targetNamespace="default" version="8.0.5.0" xmlns:map="default">
+    <inlinedXMLSchema><![CDATA[<?xml version="1.0" encoding="UTF-8"?><xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:Q1="http://www.ibm.com/iib/msl/json">                                   
+            <xsd:import namespace="http://www.ibm.com/iib/msl/json" schemaLocation="/interface_schema.json"/>                                 
+                   <xsd:element name="POINTS_DEVICETYPE" nillable="true" type="xsd:string"/>                            
+    <xsd:element name="FORMAT" nillable="true" type="xsd:dateTime"/>                              
+    <xsd:element name="UPDATED_UTC" nillable="true" type="xsd:dateTime"/>                              
+    <xsd:element name="STATUS" nillable="true" type="xsd:integer"/>                              
+    <xsd:element name="DATASOURCE_ID" nillable="true" type="xsd:string"/>                              
+    <xsd:element name="POINTS" nillable="true" type="Q1:JSONArray_POINTS"/>                              
+    <xsd:element name="EVENTTYPE" nillable="true" type="xsd:string"/>                                 
+    <xsd:element name="LOGICALINTERFACE_ID" nillable="true" type="xsd:string"/>                                   
+    <xsd:element name="EVT_TIMESTAMP" nillable="true" type="xsd:dateTime"/>                                   
+    <xsd:element name="DATASOURCE_DEVICETYPE" nillable="true" type="xsd:string"/>                                   
+    <xsd:element name="PrimaryKey" nillable="true" type="xsd:integer"/>                                   
+</xsd:schema>]]></inlinedXMLSchema>
+    <input path="jar:file://!com/ibm/etools/mft/map/xsds/predefined/JsonDomainMsg.xsd" var="var"/>
+    <input inlinedXMLSchema="true" path="../schema_1.xsd" var="var2"/>
+    <output path="jar:file://!com/ibm/etools/mft/map/xsds/predefined/JsonDomainMsg.xsd" var="var1"/>
+    <output path="db:table(/BLUDB.dbm,BLUDB,BLUADMIN,POINTS)" var="POINTS"/>
+    <output path="db:table(/BLUDB.dbm,BLUDB,BLUADMIN,DATASOURCES)" var="DATASOURCES"/>
+    <output path="db:table(/BLUDB.dbm,BLUDB,BLUADMIN,POINTS_DIMENSION)" var="POINTSDIMENSION"/>
+    <namespaces>
+        <namespace kind="supplement" prefix="io" uri="http://www.ibm.com/iib/msl/json"/>
+        <namespace kind="extension" prefix="fn" uri="http://www.w3.org/2005/xpath-functions"/>
+        <namespace kind="extension" prefix="xs" uri="http://www.w3.org/2001/XMLSchema"/>
+    </namespaces>
+    <generation engine="xquery"/>
+    <mappingDeclaration name="PISystemMaximoMonitorMapping">
+        <input namespace="http://www.ibm.com/iib/msl/json" path="$var/mb:msg(JSON,assembly,JSON,Properties)" var="ComIbmMessageAssembly_JSON">
+            <cast castType="userDefined" path="$ComIbmMessageAssembly_JSON/JSON/Data/type('anyType')" qualifier="{http://www.ibm.com/iib/msl/json}JSONObject" ref="var" var="anyType"/>
+            <cast castType="userDefined" path="$ComIbmMessageAssembly_JSON/JSON/spath('Data',2)/any" qualifier="PrimaryKey" ref="var2" var="any"/>
+            <cast castType="userDefined" path="$ComIbmMessageAssembly_JSON/JSON/spath('Data',2)/any" qualifier="DATASOURCE_ID" ref="var2" var="any7"/>
+            <cast castType="userDefined" path="$ComIbmMessageAssembly_JSON/JSON/spath('Data',2)/any" qualifier="DATASOURCE_DEVICETYPE" ref="var2" var="any1"/>
+            <cast castType="userDefined" path="$ComIbmMessageAssembly_JSON/JSON/spath('Data',2)/any" qualifier="POINTS_DEVICETYPE" ref="var2" var="any6"/>
+            <cast castType="userDefined" path="$ComIbmMessageAssembly_JSON/JSON/spath('Data',2)/any" qualifier="LOGICALINTERFACE_ID" ref="var2" var="any3"/>
+            <cast castType="userDefined" path="$ComIbmMessageAssembly_JSON/JSON/spath('Data',2)/any" qualifier="EVENTTYPE" ref="var2" var="any4"/>
+            <cast castType="userDefined" path="$ComIbmMessageAssembly_JSON/JSON/spath('Data',2)/any" qualifier="FORMAT" ref="var2" var="any9"/>
+            <cast castType="userDefined" path="$ComIbmMessageAssembly_JSON/JSON/spath('Data',2)/any" qualifier="UPDATED_UTC" ref="var2" var="any10"/>
+            <cast castType="userDefined" path="$ComIbmMessageAssembly_JSON/JSON/spath('Data',2)/any" qualifier="STATUS" ref="var2" var="any8"/>
+            <cast castType="userDefined" path="$ComIbmMessageAssembly_JSON/JSON/spath('Data',2)/any" qualifier="EVT_TIMESTAMP" ref="var2" var="any2"/>
+            <cast castType="userDefined" path="$ComIbmMessageAssembly_JSON/JSON/spath('Data',2)/any" qualifier="POINTS" ref="var2" var="any5"/>
+        </input>
+        <output namespace="http://www.ibm.com/iib/msl/json" path="$var1/mb:msg(JSON,assembly,JSON,Properties)" var="ComIbmMessageAssembly_JSON1">
+            <cast castType="userDefined" path="$ComIbmMessageAssembly_JSON1/JSON/Data/type('anyType')" qualifier="{http://www.ibm.com/iib/msl/json}JSONObject" ref="var1" var="anyType1"/>
+        </output>
+        <output path="$POINTS/db:insert(fn:false(),DEVICEID,EVT_TIMESTAMP,DEVICETYPE,LOGICALINTERFACE_ID,EVENTTYPE,FORMAT,UPDATED_UTC,POINT_VALUE,POINT_ID)" var="dbinsert1"/>
+        <move>
+            <input path="$ComIbmMessageAssembly_JSON/Properties"/>
+            <output path="$ComIbmMessageAssembly_JSON1/Properties"/>
+        </move>
+        <move>
+            <input path="$ComIbmMessageAssembly_JSON/JSON"/>
+            <output path="$ComIbmMessageAssembly_JSON1/JSON"/>
+        </move>
+        <insert>
+            <input path="$ComIbmMessageAssembly_JSON/JSON/spath('Data',2)"/>
+            <output path="$dbinsert1/." var="dbinsert2"/>
+            <output path="$DATASOURCES/db:insert(fn:false(),DEVICEID,EVT_TIMESTAMP,DEVICETYPE,LOGICALINTERFACE_ID,EVENTTYPE,FORMAT,UPDATED_UTC,STATUS)" var="dbinsert"/>
+            <foreach>
+                <input path="POINTS/Item" var="Item"/>
+                <input auxiliary="true" path="DATASOURCE_ID" var="DATASOURCE_ID"/>
+                <input auxiliary="true" path="POINTS_DEVICETYPE" var="POINTS_DEVICETYPE"/>
+                <output path="$dbinsert2/." var="dbinsert5"/>
+                <output path="$POINTSDIMENSION/db:insert(fn:false(),DEVICEID,ASSET_TYPE,ASSET_NAME,ASSETID,ASSET_DESCRIPTION,POINT_PATH,CLIENT,LOCATION,SITE,POINT_DESCRIPTION,POINT_UNITS,POINT_DATASOURCE_ID,POINT_LABEL,POINT_TYPE)" var="dbinsert3"/>
+                <foreach>
+                    <input path="$Item/VALUES/Item" var="Item1"/>
+                    <input auxiliary="true" path="$Item/DEVICEID" var="DEVICEID"/>
+                    <input auxiliary="true" path="$Item/LOGICALINTERFACE_ID" var="LOGICALINTERFACE_ID"/>
+                    <input auxiliary="true" path="$Item/EVENTTYPE" var="EVENTTYPE"/>
+                    <input auxiliary="true" path="$Item/FORMAT" var="FORMAT"/>
+                    <input auxiliary="true" path="$POINTS_DEVICETYPE/." var="POINTS_DEVICETYPE1"/>
+                    <output path="$dbinsert5/." var="dbinsert4"/>
+                    <move>
+                        <input path="$Item1/VALUE"/>
+                        <output path="$dbinsert4/POINT_VALUE"/>
+                    </move>
+                    <move>
+                        <input path="$Item1/EVT_TIMESTAMP"/>
+                        <output path="$dbinsert4/EVT_TIMESTAMP"/>
+                    </move>
+                    <move>
+                        <input path="$Item1/UPDATED_UTC"/>
+                        <output path="$dbinsert4/UPDATED_UTC"/>
+                    </move>
+                    <move>
+                        <input path="$DEVICEID/."/>
+                        <output path="$dbinsert4/DEVICEID"/>
+                    </move>
+                    <move>
+                        <input path="$LOGICALINTERFACE_ID/."/>
+                        <output path="$dbinsert4/LOGICALINTERFACE_ID"/>
+                    </move>
+                    <move>
+                        <input path="$EVENTTYPE/."/>
+                        <output path="$dbinsert4/EVENTTYPE"/>
+                    </move>
+                    <move>
+                        <input path="$FORMAT/."/>
+                        <output path="$dbinsert4/FORMAT"/>
+                    </move>
+                    <move>
+                        <input path="$POINTS_DEVICETYPE1/."/>
+                        <output path="$dbinsert4/DEVICETYPE"/>
+                    </move>
+                    <move>
+                        <input path="$DEVICEID/." var="DEVICEID"/>
+                        <output path="$dbinsert4/POINT_ID"/>
+                    </move>
+                </foreach>
+                <move>
+                    <input path="$DATASOURCE_ID/." var="DATASOURCE_ID"/>
+                    <output path="$dbinsert3/POINT_DATASOURCE_ID"/>
+                </move>
+                <move>
+                    <input path="$Item/UNITS"/>
+                    <output path="$dbinsert3/POINT_UNITS"/>
+                </move>
+                <move>
+                    <input path="$Item/ASSET_NAME"/>
+                    <output path="$dbinsert3/ASSET_NAME"/>
+                </move>
+                <move>
+                    <input path="$Item/LABEL"/>
+                    <output path="$dbinsert3/POINT_LABEL"/>
+                </move>
+                <move>
+                    <input path="$Item/DESCRIPTION"/>
+                    <output path="$dbinsert3/POINT_DESCRIPTION"/>
+                </move>
+                <move>
+                    <input path="$Item/TYPE"/>
+                    <output path="$dbinsert3/POINT_TYPE"/>
+                </move>
+                <move>
+                    <input path="$Item/DEVICEID"/>
+                    <output path="$dbinsert3/DEVICEID"/>
+                </move>
+                <move>
+                    <input path="$Item/POINT_PATH"/>
+                    <output path="$dbinsert3/POINT_PATH"/>
+                </move>
+                <move>
+                    <input path="$Item/DEVICEID"/>
+                    <output path="$dbinsert3/ASSETID"/>
+                </move>
+            </foreach>
+            <move>
+                <input path="STATUS"/>
+                <output path="$dbinsert/STATUS"/>
+            </move>
+            <move>
+                <input path="EVT_TIMESTAMP"/>
+                <output path="$dbinsert/EVT_TIMESTAMP"/>
+            </move>
+            <move>
+                <input path="UPDATED_UTC"/>
+                <output path="$dbinsert/UPDATED_UTC"/>
+            </move>
+            <move>
+                <input path="FORMAT"/>
+                <output path="$dbinsert/FORMAT"/>
+            </move>
+            <move>
+                <input path="EVENTTYPE"/>
+                <output path="$dbinsert/EVENTTYPE"/>
+            </move>
+            <move>
+                <input path="LOGICALINTERFACE_ID"/>
+                <output path="$dbinsert/LOGICALINTERFACE_ID"/>
+            </move>
+            <move>
+                <input path="DATASOURCE_DEVICETYPE"/>
+                <output path="$dbinsert/DEVICETYPE"/>
+            </move>
+            <move>
+                <input path="DATASOURCE_ID"/>
+                <output path="$dbinsert/DEVICEID"/>
+            </move>
+        </insert>
+    </mappingDeclaration>
+</mappingRoot>

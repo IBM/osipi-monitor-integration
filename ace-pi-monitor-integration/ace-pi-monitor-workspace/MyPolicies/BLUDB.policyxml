@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<policies>
+  <policy policyType="JDBCProviders" policyName="BLUDB" policyTemplate="DB2_91_Windows">
+    <databaseName>BLUDB</databaseName>
+    <databaseType>DB2 Universal Database</databaseType>
+    <databaseVersion>11.1</databaseVersion>
+    <type4DriverClassName>com.ibm.db2.jcc.DB2Driver</type4DriverClassName>
+    <type4DatasourceClassName>com.ibm.db2.jcc.DB2XADataSource</type4DatasourceClassName>
+    <connectionUrlFormat>jdbc:db2://[serverName]:[portNumber]/[databaseName]:user=[user];password=[password];</connectionUrlFormat>
+    <connectionUrlFormatAttr1></connectionUrlFormatAttr1>
+    <connectionUrlFormatAttr2></connectionUrlFormatAttr2>
+    <connectionUrlFormatAttr3></connectionUrlFormatAttr3>
+    <connectionUrlFormatAttr4></connectionUrlFormatAttr4>
+    <connectionUrlFormatAttr5></connectionUrlFormatAttr5>
+    <serverName>dashdb-enterprise-yp-dal12-125.services.dal.bluemix.net</serverName>
+    <portNumber>50000</portNumber>
+    <jarsURL>./Monitor-DB2/</jarsURL>
+    <databaseSchemaNames>BLUADMIN</databaseSchemaNames>
+    <description></description>
+    <maxConnectionPoolSize>0</maxConnectionPoolSize>
+    <securityIdentity>mydbidentity</securityIdentity>
+    <environmentParms></environmentParms>
+    <jdbcProviderXASupport>false</jdbcProviderXASupport>
+    <useDeployedJars>false</useDeployedJars>
+  </policy>
+</policies>

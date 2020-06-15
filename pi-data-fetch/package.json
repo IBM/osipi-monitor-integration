@@ -11,6 +11,8 @@
   "author": "IBM",
   "license": "Apache-2.0",
   "dependencies": {
-    "axios": "^0.19.2"
+    "axios": "^0.19.2",
+    "dotenv": "^8.2.0",
+    "winston": "^3.2.1"
   }
 }
