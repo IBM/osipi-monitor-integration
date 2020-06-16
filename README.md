@@ -6,7 +6,7 @@ To run
 
 1. Clone the repo
 2. Run `npm install`
-3. Define a .env in the directory on par with src
+3. Define/update the .env in the directory on par with src
 4. Run `npm start`
 
 A sample .env
