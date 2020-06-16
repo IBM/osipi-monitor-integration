@@ -150,14 +150,14 @@ const getAttributeRecordedData = (attribute, startTime) => {
         point.UNITS = attribute.DefaultUnitsName;
         point.TYPE = trimData(attribute.Type, 50);
         point.DESCRIPTION = trimData(attribute.Description, 50);
-          console.log(attribute.Path);
+
         // point.LABEL = getLabel(attribute.TypeQualifier, 50);          
         point.LABEL = getLabel(attribute.Path, 50);
         point.ASSET_NAME = trimData(attribute.Name, 50);
 
         point.VALUES = new Array();
         response.data.Items.forEach((element) => {
-          // console.log(element.Timestamp);
+
           if (isANumber(element.Value)) {
             point.VALUES.push({
               VALUE: formatNumber(element.Value, 2),
@@ -179,7 +179,7 @@ const getAttributeRecordedData = (attribute, startTime) => {
 };
 
 const getLabel = (theString) => {
-  console.log(theString);
+
   const index = theString.lastIndexOf("|");
 
   if (index >= 0) {
