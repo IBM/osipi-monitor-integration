@@ -1,0 +1,98 @@
+{
+    "timeGrain": "hour",
+    "cards": [
+        {
+            "id": "card-point_value-timeseries",
+            "dataSource": {
+                "attributes": [
+                    {
+                        "aggregator": "max",
+                        "attribute": "point_value_Hourly_Summary_Dashboard_max",
+                        "id": "point_value_Hourly_Summary_Dashboard_max"
+                    },
+                    {
+                        "aggregator": "mean",
+                        "attribute": "point_value_Hourly_Summary_Dashboard_mean",
+                        "id": "point_value_Hourly_Summary_Dashboard_mean"
+                    },
+                    {
+                        "aggregator": "min",
+                        "attribute": "point_value_Hourly_Summary_Dashboard_min",
+                        "id": "point_value_Hourly_Summary_Dashboard_min"
+                    }
+                ],
+                "range": {
+                    "count": -7,
+                    "interval": "day"
+                },
+                "timeGrain": "hour"
+            },
+            "content": {
+                "series": [
+                    {
+                        "dataSourceId": "point_value_Hourly_Summary_Dashboard_max",
+                        "label": "Max"
+                    },
+                    {
+                        "dataSourceId": "point_value_Hourly_Summary_Dashboard_mean",
+                        "label": "Mean"
+                    },
+                    {
+                        "dataSourceId": "point_value_Hourly_Summary_Dashboard_min",
+                        "label": "Min"
+                    }
+                ],
+                "xLabel": "Time",
+                "yLabel": "Point_value"
+            },
+            "size": "LARGE",
+            "title": "Osi PI Point Value Daily Max, Min and Mean",
+            "type": "TIMESERIES"
+        }
+    ],
+    "title": "Daily Summary Dashboard",
+    "layouts": {
+        "max": [
+            {
+                "i": "card-point_value-timeseries",
+                "x": 0,
+                "y": 0
+            }
+        ],
+        "xl": [
+            {
+                "i": "card-point_value-timeseries",
+                "x": 0,
+                "y": 0
+            }
+        ],
+        "lg": [
+            {
+                "i": "card-point_value-timeseries",
+                "x": 0,
+                "y": 0
+            }
+        ],
+        "md": [
+            {
+                "i": "card-point_value-timeseries",
+                "x": 0,
+                "y": 0
+            }
+        ],
+        "sm": [
+            {
+                "i": "card-point_value-timeseries",
+                "x": 0,
+                "y": 0
+            }
+        ],
+        "xs": [
+            {
+                "i": "card-point_value-timeseries",
+                "x": 0,
+                "y": 0
+            }
+        ]
+    }
+}
