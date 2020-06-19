@@ -1,5 +1,6 @@
 const axios = require("axios");
 const winston = require("winston");
+const RegexParser = require("regex-parser");
 
 require("dotenv").config();
 process.env.NODE_TLS_REJECT_UNAUTHORIZED = "0";
@@ -103,10 +104,12 @@ const getAttributes = (element, startTime) => {
       // handle success
       var arr = response.data.Items;
       arr.forEach((attribute) => {
-        if (
-          (element.Name === FILTER_ELEM_NAME && FILTER_ELEM_NAME != "") ||
-          FILTER_ELEM_NAME === ""
-        ) {
+
+        // if (
+        //   (element.Name === FILTER_ELEM_NAME && FILTER_ELEM_NAME != "") ||
+        //   FILTER_ELEM_NAME === "") 
+        if (useElement(element.Name))
+          {
           // Use only if we want to filter a specific element
           getAttributeRecordedData(attribute, startTime);
         }
@@ -117,6 +120,20 @@ const getAttributes = (element, startTime) => {
       logger.error(error);
     });
 };
+
+const useElement = (elementName) => {
+  
+  if (elementName) {
+    const regex = RegexParser(FILTER_ELEM_NAME); 
+    const returnValue = regex.test(elementName);
+    console.log("Element", elementName);
+    console.log("Expression", FILTER_ELEM_NAME);
+    console.log("Return", returnValue);
+    return returnValue;
+  }
+
+  return true; // if empty/null/etc we use it
+}
 
 const getAttributeRecordedData = (attribute, startTime) => {
   pointDataURL = attribute.Links.RecordedData;
@@ -145,19 +162,19 @@ const getAttributeRecordedData = (attribute, startTime) => {
         point.DEVICEID = trimData(attribute.Id, 50);
         point.LOGICALINTERFACE_ID = trimData(attribute.WebId, 50);
         point.EVENTTYPE = "PIPOINT";
-        point.POINT_PATH = trimData(attribute.Path, 50);
+        point.POINT_PATH = getLabel(attribute.Path);
         point.FORMAT = "";
         point.UNITS = attribute.DefaultUnitsName;
         point.TYPE = trimData(attribute.Type, 50);
         point.DESCRIPTION = trimData(attribute.Description, 50);
-
-        // point.LABEL = getLabel(attribute.TypeQualifier, 50);          
-        point.LABEL = getLabel(attribute.Path, 50);
+        point.LABEL = trimData(attribute.TypeQualifier, 50);
         point.ASSET_NAME = trimData(attribute.Name, 50);
 
         point.VALUES = new Array();
         response.data.Items.forEach((element) => {
 
+        // console.log(element.Timestamp);
+          
           if (isANumber(element.Value)) {
             point.VALUES.push({
               VALUE: formatNumber(element.Value, 2),
@@ -179,18 +196,18 @@ const getAttributeRecordedData = (attribute, startTime) => {
 };
 
 const getLabel = (theString) => {
-
-  const index = theString.lastIndexOf("|");
+  
+  const index = theString.lastIndexOf('|');
 
   if (index >= 0) {
-    return theString.slice(index + 1);
+    return theString.slice((index + 1));
   }
   return theString;
-};
+}
 
 const trimData = (theString, length) => {
   if (theString) {
-    return theString.slice(0, length - 1);
+    return theString.slice(0, (length - 1));
   }
   return theString;
 };
@@ -200,16 +217,17 @@ const isANumber = (theNumber) => {
     return false;
   }
   return !isNaN(theNumber);
-};
 
 const formatNumber = (theNumber, decimalPlaces) => {
+  console.log("start",theNumber);
   const roundedNumber = Number(
     Math.round(parseFloat(theNumber + "e" + decimalPlaces)) +
       "e-" +
       decimalPlaces
   );
+  console.log(roundedNumber);
   return roundedNumber;
-};
+} 
 
 getUpdatedPointData(STARTTIME);
 
@@ -227,15 +245,13 @@ delay(5000).then(() => {
     .then(function (response) {
       logger.info(JSON.stringify(piData));
       logger.info(response);
-      logger.info("Success");
       console.log("Success");
     })
     .catch(function (error) {
       logger.info(JSON.stringify(piData));
 
       logger.error(error);
-      logger.info("Error");
       console.log("Error");
-      console.log(error);
+    	console.log(error);
     });
 });
