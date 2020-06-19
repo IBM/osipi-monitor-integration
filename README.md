@@ -1,5 +1,5 @@
 # Monitor operational data captured in an OSIsoft PI data historian with Maximo Asset Monitor
-Integrate PLC data from an OSIsoft PI Data Historian with Maximo Asset Monitor using IBM App Connect 
+Integrate PLC data from an OSIsoft PI Data Historian with Maximo Asset Monitor using IBM App Connect
 
 ## Introduction
 A connected and instrument world of the internet of things, devices such as temperature, pressure or flow sensors and actuators are the key source of intelligence and automation in instrumented industrial and manufacturing processes. In many scenarios, Programmable Logic Controller (PLC) and Remote Terminal Unit (RTU) systems typically have direct control over these devices and are able to monitor and control their state. Supervisory control and data acquisition (SCADA) is a device monitoring and controlling framework comprising of instrumented equipment and process, PLC systems, higher level supervisory control computers and often a data historian. The historian is typically a database that captures site and equipment data along with instrumented time series sensor data. The data elements or attributes that are captured are tags or points that correspond to sensors that are often associated with asset site and location.  
@@ -22,12 +22,12 @@ When you have completed this code pattern, you will understand how to:
 <!--Optionally, add flow steps based on the architecture diagram-->
 ## Flow
 
-1. The PI System collects operational asset time series sensor data  as PI points via a PI Interface which gets persisted in a PI archive. 
-2. A scheduled cron script fetches new point data from the archive or data historian using PI Web APIs, filters and formats the data and sends it to App Connect via a HTTP POST. 
-3. In App Connect, point data is mapped to data in the entity type and dimensions tables that was created to store point data and point meta-data. 
+1. The PI System collects operational asset time series sensor data  as PI points via a PI Interface which gets persisted in a PI archive.
+2. A scheduled cron script fetches new point data from the archive or data historian using PI Web APIs, filters and formats the data and sends it to App Connect via a HTTP POST.
+3. In App Connect, point data is mapped to data in the entity type and dimensions tables that was created to store point data and point meta-data.
 4. Point data captured in these tables for each site and asset can be viewed in Maximo Asset Monitor and dashboards created for a consolidated view.  
 
- 
+
 <!--Optionally, update this section when the video is created-->
 # Watch the Video
 
@@ -77,32 +77,34 @@ git clone https://github.com/IBM/maximo-monitor-osipi-integration.git
 
 ### 3. Prepare Maximo Asset Monitor to receive PI point data
 
-Connect to your instance of Maximo Asset Monitor to create tables to capture the well downtime point data and dashboards to display and summarize the data. 
+Monitor is used to create dashboard that allow you to remotely monitor the performance of your assets.  Including Anomaly Detection and generating alerts and Maximo Work Order creation to address anomaly's needing attention.  Follow the steps for setting up your local development environment for Maximo Asset Monitor here
 
-* Login to Maximo Asset Monitor and navigate to the "Db2 Warehouse on Cloud" services on the Services tab. First, create Entity Types, Entities, Metrics and Dimensions tables in the Maximo Asset Monitor database to capture the PI historian points.  
+* Create your Points Entity Type that will have the metrics that are ingested from OSI Pi in to Monitor.  Create the Points entity type using:
+ `python ~/source/scripts/create_points_entities.py`
+
+* Create your Data Sources Entity Type that will have the the database connection details for the OSI Pi Historian and provide you a way to monitor data ingestion frequency and if the connector is working.  Create the Datasource entity type using:
+ `python ~/source/scripts/create_datasource_entities.py`
+
+* Create a credentials file in the `scripts` folder named `Monitor-Demo-Credentials.json`.  You can find your Monitor credentials in on the `Services` tab in your instance of Maximo Asset Monitor.
+
+* From the same `Service` tab, launch "Db2 Warehouse on Cloud" services on the Services tab. Check to see if you scripts have created the tables for you Points and Datasources Entity Types, metrics and dimensions tables in the Maximo Asset Monitor database to capture the PI historian points.  
 
 ![Maximo Asset Monitor Dashboard](images/MAM-DB-Dashboard-Image2.png)
 
-* Click on the Details and note down the JDBC URL property. This will be needed later when configuring your flow in App Connect to connect to the Maximo Asset Monitor database.
+* Download the DB2 JDBC Jar files from the `Connection` menu option in DB2 Warehouse Web UI.  
+
+* Click on the Details and note down the JDBC URL property, user id and password.  This will be needed later when configuring your `BluDB.policyxml` and `USERS.policyxml` file in App Connect to connect to the Maximo Asset Monitor database.
+
+The App Connect service using the message flow included in this pattern and the DB2 JDBC drivers you download onto the host running App Connect will be used to publish data into the Monitor Database.
 
 ![](images/MAM-DB-Properties-Image3.png)
-
-***TODO: DETAILS AND SCREEN SHOTS HERE OF THE DASHDB OR ANYTHING ELSE RELATED THAT NEEDS TO BE CREATED IN MONITOR***
-* Connect to the Monitor database with your choice of a database client using the JDBC URL and credentials to create tables to capture Entity Types, Entities, Metrics and Dimension data. The EntityType table is where normal metrics are stored. Each metric is an IO Point with a name and value. EntityType_Dimensions table is where metadata that is applied to entities is stored. DM_EntityType is where all calculated metrics are stored in as Name-value pairs. Navigate to the maximo-asset-monitor/db-scripts directory in your clone GitHub repository which contains the 3 database definition language scripts that need to be run from your database client to create these tables. 
-
-***NOT SURE IF THIS IS NEEDED IF SO INSTRUCTIONS NEEDED HERE**
-* Create an Entity Type
 
 
 ### 4. Install the App Connect Enterprise Developer Edition Toolkit
 
-App Connect Enterprise is used to connect data from the OSIsoft PI data historian to Maximo Asset Monitor. The source code in the ace-pi-monitor-integration directory of the cloned GitHub repository defines a flow and a data mapping to achieve this goal. The input node to the flow is a HTTP POST node that accepts a JSON data object. An OSIsoft Web API REST client periodically fetches new point data from PI and sends this point data as JSON to App Connect by calling a POST REST API call. This data is then mapped to columns of the 3 newly created tables in the Maximo Asset Monitor. The output node of the flow is a JDBC connection to insert data in the EntityType, DM_EntityType and EntityType_Dimensions Maximo Asset Monitor tables.  
+App Connect Enterprise is used to ingest data from the OSIsoft PI data historian to Maximo Asset Monitor. The source code in the ace-pi-monitor-integration directory of the cloned GitHub repository defines a flow and a data mapping to achieve this goal. The input node to the flow is a HTTP POST node that accepts a JSON data object. An OSIsoft Web API REST client periodically fetches new point data from PI and sends this point data as JSON to App Connect by calling a POST REST API call. This data is then mapped to columns of the 3 newly created tables in the Maximo Asset Monitor. The output node of the flow is a JDBC connection to insert data in the EntityType, DM_EntityType and EntityType_Dimensions Maximo Asset Monitor tables.  
 
 ![](images/ACE-Flow-Image.png)
-
-You will need to configure the connection and other configuration settings in this flow. Then rebuild and deploy the mapping which is packaged as a .bar file to an App Connect Enterprise runtime.  
-
-* IBM App Connect Enterprise (ACE) Developer edition is a functional version that can used by developers to evaluate and prototype integration solutions. It is available for Windows 64-bit, Linux® on x86-64, and for MacOS.  ACE is available to download without charge from https://www.ibm.com/marketing/iwm/iwm/web/dispatcher.do?source=swg-wmbfd . Install the App Connect Enterprise Toolkit by following the instructions in the [Knowledge Center](https://www.ibm.com/support/knowledgecenter/SSTTDS_11.0.0/com.ibm.etools.mft.doc/ba10630_.html) or in the [Get started with IBM App Connect Enterprise article](https://developer.ibm.com/integration/docs/app-connect-enterprise/get-started/).  
 
 
 ### 5. Setup and start an App Connect Enterprise container
@@ -111,8 +113,8 @@ The messaging flow and mapping created and packaged by the toolkit will need to 
 
 * Login to or create a new [IBM Clout Lite (free tier)](https://cloud.ibm.com/login) account if you do not already have one.
 
-* Search for and provision an instance of the [IBM Cloud Kubernetes service](https://cloud.ibm.com/catalog?category=containers#services) from the IBM Cloud service catalog. 
- 
+* Search for and provision an instance of the [IBM Cloud Kubernetes service](https://cloud.ibm.com/catalog?category=containers#services) from the IBM Cloud service catalog.
+
  ![](images/ACE-IKS-Catalog-Image.png)
 
 * Your cluster could take up to 45 minutes to provision. Once it has provisioned, note down the Cluster ID of your Kubernetes cluster and the public IP address of the worker node.
@@ -121,7 +123,7 @@ The messaging flow and mapping created and packaged by the toolkit will need to 
 
  ![](images/ACE-IKS-Cluster-PublicIP-Image.png)
 
-* [Setup the IBM Cloud Command Line tools and Kubernetes service plugins](https://cloud.ibm.com/docs/containers?topic=containers-cs_cli_install) 
+* [Setup the IBM Cloud Command Line tools and Kubernetes service plugins](https://cloud.ibm.com/docs/containers?topic=containers-cs_cli_install)
 
 * Validate that you can connect to your cluster
 ```
@@ -139,21 +141,90 @@ kubectl create -f ./kube-config.yml
 
  ![](images/ACE-Instance-Image.png)
 
-***TODO Add instructions for bundling and including the JDBC drivers in the container image and its path***
-* Adding JDBC Drivers???? --- Do we need it here, the JDBC drivers have been packaged in the jar I am generating and can point directly to them
+ ### 6. Start by learning how to use message flows using the App Connect Database Mapping tutorial
+
+Get a basic message flow working to create an employee table. The tutorial included with App Connect Toolkit, has you create an employees database, which the App Connect Enterprise message flows will send a Json payload message to. Using the DB2 service in Monitor, and credentials you noted earlier to access the database.   A DB userid which has the required level of DB2 administrative privileges.  Create a new example database for this tutorial named USERS:
+
+* Start a DB2 Command Window and execute the command:  In Mac it is a menu option on the App Connect Toolkit app menu.
+Create table in SQL editor in DB2 Cloud.
+
+`db2 create database USERS`
+
+* Connect to the database which was just created, and create a table into which the message flow will insert data. From the same window, start an interactive command session by typing db2 and then execute these commands:
+`CONNECT TO USERS`
+
+`CREATE TABLE MYSCHEMA.EMPLOYEES (PKEY INTEGER NOT NULL, FIRSTNAME VARCHAR(30), LASTNAME VARCHAR(30), COUNTRY VARCHAR(2), PRIMARY KEY(PKEY))`
+
+* Create an integration node, set up your credentials, define a default policy project and then deploy by completing the following steps:
+
+* Start an App Connect Enterprise command console in Mac it it is on the top left menu option.   `~your-user-id/IBM/ACET11/workspaceMonitor/`
+
+* In `MyPolicies / Policy / USERS.policy.xml` Leave Security `DSN` `mydbidentity`
+
+* Execute the following commands:
+`mqsicreatebroker TESTNODE
+mqsistart TESTNODE
+mqsicreateexecutiongroup TESTNODE -e server
+mqsistop TESTNODE
+mqsisetdbparms TESTNODE -n jdbc::mydbidentity -u your_db2_userid -p your_db2_password
+mqsistart TESTNODE`
+
+The above `mqsisetdbparms` command configures the runtime with the required credentials (which have been abstracted from the JDBC Provider policy using the Security identity setting) for communicating with the database.
+
+When using the mapping node with a database, the JDBCProvider policy is located by App Connect Enterprise runtime based upon the name of the physical data model file (in our example named `USERS.dbm` which is used by the Mapping node to describe the structure of the database table where data is being inserted. This policy in this example is named USERS.policyxml. It must be placed into the policy project folder, so that it can be found by the runtime.  If it is easier for you you can directly modify the xml policyxml files with the db credentials and jar files. Modified Windows `C:\ProgramData\IBM\MQSI\components\TESTNODE\servers\server\run\MyPolicies`
+The default policy project which the runtime will use is defined in the server.conf.yaml file. If you are on Windows using the default workpath location, using an integration node called `TESTNODE` which owns an integration server called server, then you will find this file at the Windows Location  `C:\Program Files\ibm\ACE\11.0.0.8\server\sample\configuration`     On mac it is in `your_user_id/aceconfig/components/TESTNODE/servers/server/`
+
+* Remember to save the updated server.conf.yaml file and then restart your integration node.
+
+* Update BAR file with new policy
+
+* Drag and drop deploy the provided BAR file named DatabaseMapping.bar which you will find inside the ExampleDatabaseRetrieve application. This BAR file includes the JDBC Provider policy and the application.
+
+Use the Flow Exerciser to test the tutorial scenario
+
+* Open DatabaseMapping.msgflow.
+
+* Click the Flow Exerciser icon  to start testing the flow (when challenged you do not need to redeploy the flow again).
+
+* Click the Send Message icon .
+
+* Five saved messages are provided. Each message will drive the message flow to insert a row into the database table. Each message provides a JSON structure which has an equivalent field for each column in the database table. Select InputMessage1and click Send and your message is sent to the HTTPInput node.
+InputMessage1 contains this data:
+`{"PrimaryKey": 1,"FirstName":"Ben","LastName":"Thompson","Country":"GB"}`
+
+* After you close the dialog, the paths taken through the messageflow are highlighted. Repeat the test with the other four input messages, then check the database to see the data has been inserted successfully.
+
+* Open DatabaseMapping.Mapping (Windows).
+
+* Right click Database insert into table.
+
+* Create JSON Schema from Json File. You can reverse engineer the json into a json schema using https://jsonschema.net/home
+
+* Create Integration Service project and put interface_schema.json in it
+
+Useful References for the above steps:
+Map Json in message flow https://www.ibm.com/support/knowledgecenter/SSTTDS_11.0.0/com.ibm.gdm.doc/sm12011_.htm
+Figure out what listener for http connect and transform to db it  is using Integration server (embedded) listeners
+https://www.ibm.com/support/knowledgecenter/SSTTDS_11.0.0/com.ibm.etools.mft.doc/bc43700_.html#bc43700___bc43700_egl
 
 
-### *6. Update the App Connect application configuration and deploy to an ACE server.*   
+### 7. Update the provided App Connect application configuration to publish data to Monitor.*   
 
-* Launch the App Connect Developer toolkit. Create a new workspace and import the PI - Asset Monitor Mapping project.
+You need to configure the connection and other configuration settings in this flow using the files in the `app-connect` folder or use the App Connect DatabaseMapping tutorial flow.  In both cases you will have to rebuild and deploy the mapping which is packaged as a .bar file to an App Connect Enterprise runtime.  IBM App Connect Enterprise (ACE) Developer edition is a functional version that can used by developers to evaluate and prototype integration solutions. It is available for Windows 64-bit, Linux® on x86-64, and for MacOS.  ACE is available to download without charge from https://www.ibm.com/marketing/iwm/iwm/web/dispatcher.do?source=swg-wmbfd . Install the App Connect Enterprise Toolkit by following the instructions in the [Knowledge Center](https://www.ibm.com/support/knowledgecenter/SSTTDS_11.0.0/com.ibm.etools.mft.doc/ba10630_.html) or in the [Get started with IBM App Connect Enterprise article](https://developer.ibm.com/integration/docs/app-connect-enterprise/get-started/).  
+
+* Launch the App Connect Developer toolkit.
+
+* Create a new workspace and import the PI - Asset Monitor Mapping project.
 
 * Update the config file DB properties
 
 * Generate the bar file
 
-* Deploy to the ACE container
+* Rebuilding the bar file with the updated *.PolicyXML files and dragging it onto your server to test locally in App Connect Toolkit.
 
-### 7. Send oil well down time data from the PI data historian to Maximo Asset Monitor.
+* Once you have tested the message flows locally, deploy the bar file to your App Connect Enterprise Host.
+
+### 8. Send oil well down time data from the PI data historian to Maximo Asset Monitor.
 
 Time series point data generated by oil well sensors and SCADA systems such as well pressure, temperature, etc., is captured in the PI data historian. OSIsoft provides a RESTful [PI Web API](https://techsupport.osisoft.com/Documentation/PI-Web-API/help.html) that can be used to query and fetch this data. The pi-data-fetch sub-directory in the cloned GitHub repository contains a Node.js client that calls fetches periodic point data. It then filters and formats the data and POSTs it to the Http endpoint exposed by App Connect. In App Connect, this data is mapped to tables and columns in the Maximo Asset Monitor database. The mapped point data flows from the PI System to Maximo Asset Monitor via App Connect. Run this script on the server that hosts the PI Web API.
 
@@ -169,14 +240,14 @@ Run 'npm install'
 Update the .env (details below)
 Run 'npm start'
 
-A sample .env 
+A sample .env
 
 ```
 # PIWEBAPISVR is the URL for OSIPI Web API Server
 PIWEBAPISVR=https://172.16.85.163/piwebapi
 
 ## NOTE: The real endpoint is /assetdatabases?path=\\\\MX7VM\\OSIDemo%20Oil%20%26%20Gas%20Well%20Downtime%20Tracking%20FULL
-## However dotenv does some funny stuff with \ and doubles them so you have to use the following URL 
+## However dotenv does some funny stuff with \ and doubles them so you have to use the following URL
 PIDBPath=/assetdatabases?path=\\MX7VM\OSIDemo%20Oil%20%26%20Gas%20Well%20Downtime%20Tracking%20FULL
 
 # APPCONNECT_POST_PATH is the URL of where th ACE server enpoint is to send the data to
@@ -185,7 +256,7 @@ APPCONNECT_POST_PATH=http://71.14.100.253:7800/DatabaseMapping
 # STARTTIME is what time period are you pulling the data from as per the OSI PI WEB API time periods
 STARTTIME=-1H
 
-# FILTER_ELEM_NAME is the name you want to filter on 
+# FILTER_ELEM_NAME is the name you want to filter on
 FILTER_ELEM_NAME=Well17
 
 # LOG_LEVEL is the level of logging Pino should use
@@ -200,10 +271,10 @@ This script fetches the latest data in the past hour (determined by the STARTTIM
 
  ![](images/PIWebAPIClient-Schedule.png)  
 
-   
+
 ### 8. *View oil well down time data in Maximo Asset Monitor*  
 
-* Login to your instance of Maximo Asset Monitor and click on the Monitor tab. Here you can see all of the entity types created. 
+* Login to your instance of Maximo Asset Monitor and click on the Monitor tab. Here you can see all of the entity types created.
 
 * Search for your Entity Type "POINTS"
 
@@ -224,13 +295,11 @@ This script fetches the latest data in the past hour (determined by the STARTTIM
  ![](images/MaximoMonitor-POINT-EntityType-Data.png)  
 
 
-### 9. *Create a dashboard to monitor Oil Well operations in Maximo Asset Monitor*
+### 9. *Create and view dashboard to monitor Oil Well operations in Maximo Asset Monitor*
 
-* Create a calculated Metric
+* Create an instance dashboard by importing the dashboard template json in `~maximo-asset-monitor/dasbhoards`
 
-* Create a new Summary Dashboard
-
-
+* Create a new Summary Dashboard by importing the dashboard template json in `~maximo-asset-monitor/dasbhoards`
 
 
 <!-- keep this -->
@@ -239,4 +308,3 @@ This script fetches the latest data in the past hour (determined by the STARTTIM
 This code pattern is licensed under the Apache License, Version 2. Separate third-party code objects invoked within this code pattern are licensed by their respective providers pursuant to their own separate licenses. Contributions are subject to the [Developer Certificate of Origin, Version 1.1](https://developercertificate.org/) and the [Apache License, Version 2](https://www.apache.org/licenses/LICENSE-2.0.txt).
 
 [Apache License FAQ](https://www.apache.org/foundation/license-faq.html#WhatDoesItMEAN)
-
