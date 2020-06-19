@@ -285,6 +285,7 @@ This script fetches the latest data in the past hour (determined by the STARTTIM
 ### 9. *Create and view dashboard to monitor Oil Well operations in Maximo Asset Monitor*
 
 * Create an instance dashboard by importing the dashboard template json in `~maximo-asset-monitor/dasbhoards`
+*Add screen shot*
 
 * Create a new Summary Dashboard by importing the dashboard template json in `~maximo-asset-monitor/dasbhoards`
 
