@@ -1,0 +1,258 @@
+{
+    "timeGrain": "hour",
+    "cards": [
+        {
+            "id": "card-point_value-timeseries",
+            "dataSource": {
+                "attributes": [
+                    {
+                        "aggregator": "mean",
+                        "attribute": "point_value",
+                        "id": "meanpoint_value"
+                    },
+                    {
+                        "aggregator": "max",
+                        "attribute": "point_value",
+                        "id": "maxpoint_value"
+                    },
+                    {
+                        "aggregator": "min",
+                        "attribute": "point_value",
+                        "id": "minpoint_value"
+                    },
+                    {
+                        "attribute": "point_value",
+                        "id": "point_value"
+                    },
+                    {
+                        "attribute": "asset_name",
+                        "id": "asset_name"
+                    },
+                    {
+                        "attribute": "point_units",
+                        "id": "point_units"
+                    }
+                ],
+                "range": {
+                    "count": -24,
+                    "interval": "hour"
+                },
+                "timeGrain": "hour"
+            },
+            "content": {
+                "series": [
+                    {
+                        "dataSourceId": "point_value",
+                        "label": "Raw {asset_name} {point_units}"
+                    },
+                    {
+                        "dataSourceId": "meanpoint_value",
+                        "label": "Mean {asset_name} {point_units}"
+                    },
+                    {
+                        "dataSourceId": "minpoint_value",
+                        "label": "Mean {asset_name} {point_units}"
+                    },
+                    {
+                        "dataSourceId": "maxpoint_value",
+                        "label": "Max {asset_name} {point_units}"
+                    }
+                ],
+                "xLabel": "Time",
+                "yLabel": "Value"
+            },
+            "size": "LARGE",
+            "title": "Points Raw, Max, Mean and Min Hourly Values",
+            "type": "TIMESERIES"
+        },
+        {
+            "id": "client_info",
+            "size": "LARGE",
+            "title": "Point Information",
+            "type": "VALUE",
+            "dataSource": {
+                "attributes": [
+                    {
+                        "attribute": "client",
+                        "id": "CLIENT"
+                    },
+                    {
+                        "attribute": "asset_name",
+                        "id": "ASSET_NAME"
+                    },
+                    {
+                        "attribute": "point_path",
+                        "id": "POINT_PATH"
+                    },
+                    {
+                        "attribute": "point_label",
+                        "id": "POINT_LABEL"
+                    }
+                ]
+            },
+            "content": {
+                "attributes": [
+                    {
+                        "dataSourceId": "CLIENT",
+                        "label": "Client"
+                    },
+                    {
+                        "dataSourceId": "ASSET_NAME",
+                        "label": "Asset Name"
+                    },
+                    {
+                        "dataSourceId": "POINT_PATH",
+                        "label": "Path"
+                    },
+                    {
+                        "dataSourceId": "POINT_LABEL",
+                        "label": "Name"
+                    }
+                ]
+            }
+        },
+        {
+            "id": "location_info",
+            "size": "MEDIUM",
+            "title": "Location Info",
+            "type": "VALUE",
+            "dataSource": {
+                "attributes": [
+                    {
+                        "attribute": "point_datasource_id",
+                        "id": "POINT_DATASOURCE_ID"
+                    },
+                    {
+                        "attribute": "point_description",
+                        "id": "POINT_DESCRIPTION"
+                    },
+                    {
+                        "attribute": "point_type",
+                        "id": "POINT_TYPE"
+                    }
+                ]
+            },
+            "content": {
+                "attributes": [
+                    {
+                        "dataSourceId": "POINT_DATASOURCE_ID",
+                        "label": "Point ID"
+                    },
+                    {
+                        "dataSourceId": "POINT_DESCRIPTION",
+                        "label": "Description"
+                    },
+                    {
+                        "dataSourceId": "POINT_TYPE",
+                        "label": "Data Type"
+                    }
+                ]
+            }
+        }
+    ],
+    "title": "Individual IO Point Time Series Charts Hourly",
+    "layouts": {
+        "max": [
+            {
+                "i": "card-point_value-timeseries",
+                "x": 0,
+                "y": 4
+            },
+            {
+                "i": "client_info",
+                "x": 0,
+                "y": 0
+            },
+            {
+                "i": "location_info",
+                "x": 8,
+                "y": 0
+            }
+        ],
+        "xl": [
+            {
+                "i": "card-point_value-timeseries",
+                "x": 0,
+                "y": 0
+            },
+            {
+                "i": "client_info",
+                "x": 8,
+                "y": 0
+            },
+            {
+                "i": "location_info",
+                "x": 0,
+                "y": 4
+            }
+        ],
+        "lg": [
+            {
+                "i": "card-point_value-timeseries",
+                "x": 0,
+                "y": 0
+            },
+            {
+                "i": "client_info",
+                "x": 8,
+                "y": 0
+            },
+            {
+                "i": "location_info",
+                "x": 12,
+                "y": 4
+            }
+        ],
+        "md": [
+            {
+                "i": "card-point_value-timeseries",
+                "x": 0,
+                "y": 0
+            },
+            {
+                "i": "client_info",
+                "x": 0,
+                "y": 4
+            },
+            {
+                "i": "location_info",
+                "x": 4,
+                "y": 8
+            }
+        ],
+        "sm": [
+            {
+                "i": "card-point_value-timeseries",
+                "x": 0,
+                "y": 0
+            },
+            {
+                "i": "client_info",
+                "x": 0,
+                "y": 4
+            },
+            {
+                "i": "location_info",
+                "x": 0,
+                "y": 6
+            }
+        ],
+        "xs": [
+            {
+                "i": "card-point_value-timeseries",
+                "x": 0,
+                "y": 0
+            },
+            {
+                "i": "client_info",
+                "x": 0,
+                "y": 4
+            },
+            {
+                "i": "location_info",
+                "x": 0,
+                "y": 6
+            }
+        ]
+    }
+}

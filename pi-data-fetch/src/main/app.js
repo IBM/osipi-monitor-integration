@@ -104,6 +104,7 @@ const getAttributes = (element, startTime) => {
       // handle success
       var arr = response.data.Items;
       arr.forEach((attribute) => {
+
         // if (
         //   (element.Name === FILTER_ELEM_NAME && FILTER_ELEM_NAME != "") ||
         //   FILTER_ELEM_NAME === "") 
@@ -171,7 +172,9 @@ const getAttributeRecordedData = (attribute, startTime) => {
 
         point.VALUES = new Array();
         response.data.Items.forEach((element) => {
-          // console.log(element.Timestamp);
+
+        // console.log(element.Timestamp);
+          
           if (isANumber(element.Value)) {
             point.VALUES.push({
               VALUE: formatNumber(element.Value, 2),
@@ -193,6 +196,7 @@ const getAttributeRecordedData = (attribute, startTime) => {
 };
 
 const getLabel = (theString) => {
+  
   const index = theString.lastIndexOf('|');
 
   if (index >= 0) {
@@ -213,7 +217,6 @@ const isANumber = (theNumber) => {
     return false;
   }
   return !isNaN(theNumber);
-}
 
 const formatNumber = (theNumber, decimalPlaces) => {
   console.log("start",theNumber);

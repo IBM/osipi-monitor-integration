@@ -1,0 +1,481 @@
+{
+    "$schema": "http://json-schema.org/draft-07/schema",
+    "$id": "http://example.com/example.json",
+    "type": "object",
+    "title": "The root schema",
+    "description": "The root schema comprises the entire JSON document.",
+    "default": {},
+    "examples": [
+        {
+            "PrimaryKey": 1,
+            "DATASOURCE_ID": "73000",
+            "DATASOURCE_DEVICETYPE": "DATASOURCES",
+            "POINTS_DEVICETYPE": "POINTS",
+            "LOGICALINTERFACE_ID": "None",
+            "EVENTTYPE": "None",
+            "FORMAT": "2020-06-02T11:01:47.528",
+            "UPDATED_UTC": "2020-06-02T11:01:47.528",
+            "STATUS": "1",
+            "EVT_TIMESTAMP": "2020-06-02T11:01:47.528",
+            "POINTS": [
+                {
+                    "DEVICEID": "3b3ad9e7-b1f4-59e9-27c1-2212c962621f",
+                    "LOGICALINTERFACE_ID": "None",
+                    "EVENTTYPE": "None",
+                    "POINT_PATH": "\\\\MX7VM\\OSIDemo Oil & Gas Well Downtime Tracking FULL\\West Texas\\Odessa\\Well17\\Pressure",
+                    "FORMAT": "2020-06-02T11:01:47.528",
+                    "UNITS": "PSI",
+                    "TYPE": "Float",
+                    "DESCRIPTION": "Oil Pressure",
+                    "LABEL": "Pressure",
+                    "ASSET_NAME": "Pump 17",
+                    "VALUES": [
+                        {
+                            "VALUE": "29.3",
+                            "EVT_TIMESTAMP": "2020-06-02T11:31:47.528",
+                            "UPDATED_UTC": "2020-06-02T11:31:47.528"
+                        },
+                        {
+                            "VALUE": "28.5",
+                            "EVT_TIMESTAMP": "2020-06-02T11:32:47.528",
+                            "UPDATED_UTC": "2020-06-02T11:32:47.528"
+                        }
+                    ]
+                },
+                {
+                    "DEVICEID": "8f81f89a-9480-11ea-8225-005056238f7b",
+                    "LOGICALINTERFACE_ID": "None",
+                    "EVENTTYPE": "None",
+                    "POINT_PATH": "\\\\MX7VM\\OSIDemo Oil & Gas Well Downtime Tracking FULL\\West Texas\\Odessa\\Well17\\Temperature",
+                    "FORMAT": "2020-06-02T11:01:47.528",
+                    "UNITS": "Degrees F",
+                    "TYPE": "Float",
+                    "DESCRIPTION": "Oil Temperature",
+                    "LABEL": "Temperature",
+                    "ASSET_NAME": "Pump 17",
+                    "VALUES": [
+                        {
+                            "VALUE": "222.3",
+                            "EVT_TIMESTAMP": "2020-06-02T11:01:47.528",
+                            "UPDATED_UTC": "2020-06-02T11:01:47.528"
+                        },
+                        {
+                            "VALUE": "348.5",
+                            "EVT_TIMESTAMP": "2020-06-02T12:01:47.528",
+                            "UPDATED_UTC": "2020-06-02T12:01:47.528"
+                        }
+                    ]
+                }
+            ]
+        }
+    ],
+    "required": [
+        "PrimaryKey",
+        "DATASOURCE_ID",
+        "DATASOURCE_DEVICETYPE",
+        "POINTS_DEVICETYPE",
+        "LOGICALINTERFACE_ID",
+        "EVENTTYPE",
+        "FORMAT",
+        "UPDATED_UTC",
+        "STATUS",
+        "EVT_TIMESTAMP",
+        "POINTS"
+    ],
+    "additionalProperties": true,
+    "properties": {
+        "PrimaryKey": {
+            "$id": "#/properties/PrimaryKey",
+            "type": "integer",
+            "title": "The PrimaryKey schema",
+            "description": "An explanation about the purpose of this instance.",
+            "default": 0,
+            "examples": [
+                1
+            ]
+        },
+        "DATASOURCE_ID": {
+            "$id": "#/properties/DATASOURCE_ID",
+            "type": "string",
+            "title": "The DATASOURCE_ID schema",
+            "description": "An explanation about the purpose of this instance.",
+            "default": "",
+            "examples": [
+                "73000"
+            ]
+        },
+        "DATASOURCE_DEVICETYPE": {
+            "$id": "#/properties/DATASOURCE_DEVICETYPE",
+            "type": "string",
+            "title": "The DATASOURCE_DEVICETYPE schema",
+            "description": "An explanation about the purpose of this instance.",
+            "default": "",
+            "examples": [
+                "DATASOURCES"
+            ]
+        },
+        "POINTS_DEVICETYPE": {
+            "$id": "#/properties/POINTS_DEVICETYPE",
+            "type": "string",
+            "title": "The POINTS_DEVICETYPE schema",
+            "description": "An explanation about the purpose of this instance.",
+            "default": "",
+            "examples": [
+                "POINTS"
+            ]
+        },
+        "LOGICALINTERFACE_ID": {
+            "$id": "#/properties/LOGICALINTERFACE_ID",
+            "type": "string",
+            "title": "The LOGICALINTERFACE_ID schema",
+            "description": "An explanation about the purpose of this instance.",
+            "default": "",
+            "examples": [
+                "None"
+            ]
+        },
+        "EVENTTYPE": {
+            "$id": "#/properties/EVENTTYPE",
+            "type": "string",
+            "title": "The EVENTTYPE schema",
+            "description": "An explanation about the purpose of this instance.",
+            "default": "",
+            "examples": [
+                "None"
+            ]
+        },
+        "FORMAT": {
+            "$id": "#/properties/FORMAT",
+            "type": "string",
+            "title": "The FORMAT schema",
+            "description": "An explanation about the purpose of this instance.",
+            "default": "",
+            "examples": [
+                "2020-06-02T11:01:47.528"
+            ]
+        },
+        "UPDATED_UTC": {
+            "$id": "#/properties/UPDATED_UTC",
+            "type": "string",
+            "title": "The UPDATED_UTC schema",
+            "description": "An explanation about the purpose of this instance.",
+            "default": "",
+            "examples": [
+                "2020-06-02T11:01:47.528"
+            ]
+        },
+        "STATUS": {
+            "$id": "#/properties/STATUS",
+            "type": "string",
+            "title": "The STATUS schema",
+            "description": "An explanation about the purpose of this instance.",
+            "default": "",
+            "examples": [
+                "1"
+            ]
+        },
+        "EVT_TIMESTAMP": {
+            "$id": "#/properties/EVT_TIMESTAMP",
+            "type": "dateTime",
+            "title": "The EVT_TIMESTAMP schema",
+            "description": "An explanation about the purpose of this instance.",
+            "default": "",
+            "examples": [
+                "2020-06-02T11:01:47.528"
+            ]
+        },
+        "POINTS": {
+            "$id": "#/properties/POINTS",
+            "type": "array",
+            "title": "The POINTS schema",
+            "description": "An explanation about the purpose of this instance.",
+            "default": [],
+            "examples": [
+                [
+                    {
+                        "DEVICEID": "3b3ad9e7-b1f4-59e9-27c1-2212c962621f",
+                        "LOGICALINTERFACE_ID": "None",
+                        "EVENTTYPE": "None",
+                        "POINT_PATH": "\\\\MX7VM\\OSIDemo Oil & Gas Well Downtime Tracking FULL\\West Texas\\Odessa\\Well17\\Pressure",
+                        "FORMAT": "2020-06-02T11:01:47.528",
+                        "UNITS": "PSI",
+                        "TYPE": "Float",
+                        "DESCRIPTION": "Oil Pressure",
+                        "LABEL": "Pressure",
+                        "ASSET_NAME": "Pump 17",
+                        "VALUES": [
+                            {
+                                "VALUE": "29.3",
+                                "EVT_TIMESTAMP": "2020-06-02T11:31:47.528",
+                                "UPDATED_UTC": "2020-06-02T11:31:47.528"
+                            },
+                            {
+                                "VALUE": "28.5",
+                                "EVT_TIMESTAMP": "2020-06-02T11:32:47.528",
+                                "UPDATED_UTC": "2020-06-02T11:32:47.528"
+                            }
+                        ]
+                    },
+                    {
+                        "DEVICEID": "8f81f89a-9480-11ea-8225-005056238f7b",
+                        "LOGICALINTERFACE_ID": "None",
+                        "EVENTTYPE": "None",
+                        "POINT_PATH": "\\\\MX7VM\\OSIDemo Oil & Gas Well Downtime Tracking FULL\\West Texas\\Odessa\\Well17\\Temperature",
+                        "FORMAT": "2020-06-02T11:01:47.528",
+                        "UNITS": "Degrees F",
+                        "TYPE": "Float",
+                        "DESCRIPTION": "Oil Temperature",
+                        "LABEL": "Temperature",
+                        "ASSET_NAME": "Pump 17",
+                        "VALUES": [
+                            {
+                                "VALUE": "222.3",
+                                "EVT_TIMESTAMP": "2020-06-02T11:01:47.528",
+                                "UPDATED_UTC": "2020-06-02T11:01:47.528"
+                            },
+                            {
+                                "VALUE": "348.5",
+                                "EVT_TIMESTAMP": "2020-06-02T12:01:47.528",
+                                "UPDATED_UTC": "2020-06-02T12:01:47.528"
+                            }
+                        ]
+                    }
+                ]
+            ],
+            "additionalItems": true,
+            "items": {
+                "anyOf": [
+                    {
+                        "$id": "#/properties/POINTS/items/anyOf/0",
+                        "type": "object",
+                        "title": "The first anyOf schema",
+                        "description": "An explanation about the purpose of this instance.",
+                        "default": {},
+                        "examples": [
+                            {
+                                "DEVICEID": "3b3ad9e7-b1f4-59e9-27c1-2212c962621f",
+                                "LOGICALINTERFACE_ID": "None",
+                                "EVENTTYPE": "None",
+                                "POINT_PATH": "\\\\MX7VM\\OSIDemo Oil & Gas Well Downtime Tracking FULL\\West Texas\\Odessa\\Well17\\Pressure",
+                                "FORMAT": "2020-06-02T11:01:47.528",
+                                "UNITS": "PSI",
+                                "TYPE": "Float",
+                                "DESCRIPTION": "Oil Pressure",
+                                "LABEL": "Pressure",
+                                "ASSET_NAME": "Pump 17",
+                                "VALUES": [
+                                    {
+                                        "VALUE": "29.3",
+                                        "EVT_TIMESTAMP": "2020-06-02T11:31:47.528",
+                                        "UPDATED_UTC": "2020-06-02T11:31:47.528"
+                                    },
+                                    {
+                                        "VALUE": "28.5",
+                                        "EVT_TIMESTAMP": "2020-06-02T11:32:47.528",
+                                        "UPDATED_UTC": "2020-06-02T11:32:47.528"
+                                    }
+                                ]
+                            }
+                        ],
+                        "required": [
+                            "DEVICEID",
+                            "LOGICALINTERFACE_ID",
+                            "EVENTTYPE",
+                            "POINT_PATH",
+                            "FORMAT",
+                            "UNITS",
+                            "TYPE",
+                            "DESCRIPTION",
+                            "LABEL",
+                            "ASSET_NAME",
+                            "VALUES"
+                        ],
+                        "additionalProperties": true,
+                        "properties": {
+                            "DEVICEID": {
+                                "$id": "#/properties/POINTS/items/anyOf/0/properties/DEVICEID",
+                                "type": "string",
+                                "title": "The DEVICEID schema",
+                                "description": "An explanation about the purpose of this instance.",
+                                "default": "",
+                                "examples": [
+                                    "3b3ad9e7-b1f4-59e9-27c1-2212c962621f"
+                                ]
+                            },
+                            "LOGICALINTERFACE_ID": {
+                                "$id": "#/properties/POINTS/items/anyOf/0/properties/LOGICALINTERFACE_ID",
+                                "type": "string",
+                                "title": "The LOGICALINTERFACE_ID schema",
+                                "description": "An explanation about the purpose of this instance.",
+                                "default": "",
+                                "examples": [
+                                    "None"
+                                ]
+                            },
+                            "EVENTTYPE": {
+                                "$id": "#/properties/POINTS/items/anyOf/0/properties/EVENTTYPE",
+                                "type": "string",
+                                "title": "The EVENTTYPE schema",
+                                "description": "An explanation about the purpose of this instance.",
+                                "default": "",
+                                "examples": [
+                                    "None"
+                                ]
+                            },
+                            "POINT_PATH": {
+                                "$id": "#/properties/POINTS/items/anyOf/0/properties/POINT_PATH",
+                                "type": "string",
+                                "title": "The POINT_PATH schema",
+                                "description": "An explanation about the purpose of this instance.",
+                                "default": "",
+                                "examples": [
+                                    "\\\\MX7VM\\OSIDemo Oil & Gas Well Downtime Tracking FULL\\West Texas\\Odessa\\Well17\\Pressure"
+                                ]
+                            },
+                            "FORMAT": {
+                                "$id": "#/properties/POINTS/items/anyOf/0/properties/FORMAT",
+                                "type": "string",
+                                "title": "The FORMAT schema",
+                                "description": "An explanation about the purpose of this instance.",
+                                "default": "",
+                                "examples": [
+                                    "2020-06-02T11:01:47.528"
+                                ]
+                            },
+                            "UNITS": {
+                                "$id": "#/properties/POINTS/items/anyOf/0/properties/UNITS",
+                                "type": "string",
+                                "title": "The UNITS schema",
+                                "description": "An explanation about the purpose of this instance.",
+                                "default": "",
+                                "examples": [
+                                    "PSI"
+                                ]
+                            },
+                            "TYPE": {
+                                "$id": "#/properties/POINTS/items/anyOf/0/properties/TYPE",
+                                "type": "string",
+                                "title": "The TYPE schema",
+                                "description": "An explanation about the purpose of this instance.",
+                                "default": "",
+                                "examples": [
+                                    "Float"
+                                ]
+                            },
+                            "DESCRIPTION": {
+                                "$id": "#/properties/POINTS/items/anyOf/0/properties/DESCRIPTION",
+                                "type": "string",
+                                "title": "The DESCRIPTION schema",
+                                "description": "An explanation about the purpose of this instance.",
+                                "default": "",
+                                "examples": [
+                                    "Oil Pressure"
+                                ]
+                            },
+                            "LABEL": {
+                                "$id": "#/properties/POINTS/items/anyOf/0/properties/LABEL",
+                                "type": "string",
+                                "title": "The LABEL schema",
+                                "description": "An explanation about the purpose of this instance.",
+                                "default": "",
+                                "examples": [
+                                    "Pressure"
+                                ]
+                            },
+                            "ASSET_NAME": {
+                                "$id": "#/properties/POINTS/items/anyOf/0/properties/ASSET_NAME",
+                                "type": "string",
+                                "title": "The ASSET_NAME schema",
+                                "description": "An explanation about the purpose of this instance.",
+                                "default": "",
+                                "examples": [
+                                    "Pump 17"
+                                ]
+                            },
+                            "VALUES": {
+                                "$id": "#/properties/POINTS/items/anyOf/0/properties/VALUES",
+                                "type": "array",
+                                "title": "The VALUES schema",
+                                "description": "An explanation about the purpose of this instance.",
+                                "default": [],
+                                "examples": [
+                                    [
+                                        {
+                                            "VALUE": "29.3",
+                                            "EVT_TIMESTAMP": "2020-06-02T11:31:47.528",
+                                            "UPDATED_UTC": "2020-06-02T11:31:47.528"
+                                        },
+                                        {
+                                            "VALUE": "28.5",
+                                            "EVT_TIMESTAMP": "2020-06-02T11:32:47.528",
+                                            "UPDATED_UTC": "2020-06-02T11:32:47.528"
+                                        }
+                                    ]
+                                ],
+                                "additionalItems": true,
+                                "items": {
+                                    "anyOf": [
+                                        {
+                                            "$id": "#/properties/POINTS/items/anyOf/0/properties/VALUES/items/anyOf/0",
+                                            "type": "object",
+                                            "title": "The first anyOf schema",
+                                            "description": "An explanation about the purpose of this instance.",
+                                            "default": {},
+                                            "examples": [
+                                                {
+                                                    "VALUE": "29.3",
+                                                    "EVT_TIMESTAMP": "2020-06-02T11:31:47.528",
+                                                    "UPDATED_UTC": "2020-06-02T11:31:47.528"
+                                                }
+                                            ],
+                                            "required": [
+                                                "VALUE",
+                                                "EVT_TIMESTAMP",
+                                                "UPDATED_UTC"
+                                            ],
+                                            "additionalProperties": true,
+                                            "properties": {
+                                                "VALUE": {
+                                                    "$id": "#/properties/POINTS/items/anyOf/0/properties/VALUES/items/anyOf/0/properties/VALUE",
+                                                    "type": "number",
+                                                    "title": "The VALUE schema",
+                                                    "description": "An explanation about the purpose of this instance.",
+                                                    "default": "",
+                                                    "examples": [
+                                                        "29.3"
+                                                    ]
+                                                },
+                                                "EVT_TIMESTAMP": {
+                                                    "$id": "#/properties/POINTS/items/anyOf/0/properties/VALUES/items/anyOf/0/properties/EVT_TIMESTAMP",
+                                                    "type": "string",
+                                                    "title": "The EVT_TIMESTAMP schema",
+                                                    "description": "An explanation about the purpose of this instance.",
+                                                    "default": "",
+                                                    "examples": [
+                                                        "2020-06-02T11:31:47.528"
+                                                    ]
+                                                },
+                                                "UPDATED_UTC": {
+                                                    "$id": "#/properties/POINTS/items/anyOf/0/properties/VALUES/items/anyOf/0/properties/UPDATED_UTC",
+                                                    "type": "string",
+                                                    "title": "The UPDATED_UTC schema",
+                                                    "description": "An explanation about the purpose of this instance.",
+                                                    "default": "",
+                                                    "examples": [
+                                                        "2020-06-02T11:31:47.528"
+                                                    ]
+                                                }
+                                            }
+                                        }
+                                    ],
+                                    "$id": "#/properties/POINTS/items/anyOf/0/properties/VALUES/items"
+                                }
+                            }
+                        }
+                    }
+                ],
+                "$id": "#/properties/POINTS/items"
+            }
+        }
+    }
+}
