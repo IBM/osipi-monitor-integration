@@ -29,9 +29,6 @@ When you have completed this code pattern, you will understand how to:
 
 
 <!--Optionally, update this section when the video is created-->
-# Watch the Video
-
-[![video](https://img.youtube.com/vi/IyQgRwAseLU/0.jpg)](https://www.youtube.com/watch?v=IyQgRwAseLU)
 
 # Included Components and Technologies
 
