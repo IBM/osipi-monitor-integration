@@ -59,7 +59,7 @@ git clone https://github.com/IBM/maximo-monitor-osipi-integration.git
 
 ### 2. Setup the OSIsoft PI Server
 
-* You will need to have an environment with the OSIsoft PI Server and dependent components like a MS SQL Enterprise database management system installed. For this code pattern a simple [PI Server deployment](https://livelibrary.OSIsoft.com/LiveLibrary/web/pub.xql?c=t&action=home&pub=server-v14&lang=en#addHistory=true&filename=GUID-FC32B910-AD95-40B3-87E0-790D4EA0F7FF.xml&docid=GUID-541BD702-45B5-4B3A-8D4B-73776F60A6B5&inner_id=&tid=&query=&scope=&resource=&toc=false&eventType=lcContent.loadDocGUID-541BD702-45B5-4B3A-8D4B-73776F60A6B5) with all PI Server components installed on the same physical Windows machine is sufficient. You will need to install the following [PI Server](https://livelibrary.OSIsoft.com/LiveLibrary/web/pub.xql?c=t&action=home&pub=server-v14&lang=en) components by using the installers and following the default install prompts (remember to point to the MS SQL database):
+You will need to have an environment with the OSIsoft PI Server and dependent components like a MS SQL Enterprise database management system installed. For this code pattern a simple [PI Server deployment](https://livelibrary.OSIsoft.com/LiveLibrary/web/pub.xql?c=t&action=home&pub=server-v14&lang=en#addHistory=true&filename=GUID-FC32B910-AD95-40B3-87E0-790D4EA0F7FF.xml&docid=GUID-541BD702-45B5-4B3A-8D4B-73776F60A6B5&inner_id=&tid=&query=&scope=&resource=&toc=false&eventType=lcContent.loadDocGUID-541BD702-45B5-4B3A-8D4B-73776F60A6B5) with all PI Server components installed on the same physical Windows machine is sufficient. You will need to install the following [PI Server](https://livelibrary.OSIsoft.com/LiveLibrary/web/pub.xql?c=t&action=home&pub=server-v14&lang=en) components by using the installers and following the default install prompts (remember to point to the MS SQL database):
     * OSIsoft Prerequisites Kit - Standalone version
     * PI Interface Configuration Utility (ICU) Install Kit
     * PI Server 2018 SP3 Patch 1 Installation Kit
@@ -74,17 +74,26 @@ git clone https://github.com/IBM/maximo-monitor-osipi-integration.git
 
 ### 3. Prepare Maximo Asset Monitor to receive PI point data
 
-Monitor is used to create dashboard that allow you to remotely monitor the performance of your assets.  Including Anomaly Detection and generating alerts and Maximo Work Order creation to address anomaly's needing attention.  Follow the steps for setting up your local development environment for Maximo Asset Monitor here
+Maximo Asset Monitor is used to create dashboards that allow you to remotely monitor the performance of your assets. As asset data is received by Monitor, functions can automatically process the data to detect anomalies, generate alerts, and create Work Orders. Follow the steps for setting up your local development environment for Maximo Asset Monitor
 
-* Create your Points Entity Type that will have the metrics that are ingested from OSI Pi in to Monitor.  Create the Points entity type using:
- `python ~/source/scripts/create_points_entities.py`
+* Create a credentials json file in the `scripts` folder named `monitor-demo-credentials.json`. You can find your Monitor credentials on the `Services` tab in your instance of Maximo Asset Monitor.
 
-* Create your Data Sources Entity Type that will have the the database connection details for the OSI Pi Historian and provide you a way to monitor data ingestion frequency and if the connector is working.  Create the Datasource entity type using:
- `python ~/source/scripts/create_datasource_entities.py`
+* Create your Points Entity Type that will have the metrics that are ingested from OSI Pi in to Monitor. This script expects the entity name, and a CSV file containing the metrics.
 
-* Create a credentials file in the `scripts` folder named `Monitor-Demo-Credentials.json`.  You can find your Monitor credentials in on the `Services` tab in your instance of Maximo Asset Monitor.
+<!-- python ~/source/scripts/create_points_entities.py -->
 
-* From the same `Service` tab, launch "Db2 Warehouse on Cloud" services on the Services tab. Check to see if you scripts have created the tables for you Points and Datasources Entity Types, metrics and dimensions tables in the Maximo Asset Monitor database to capture the PI historian points.  
+```
+python ./maximo-asset-monitor/db-scripts/create_entity.py <entity_name> <csv_file>
+```
+
+* Create your Data Sources Entity Type that will have the the database connection details for the OSI Pi Historian and provide you a way to monitor data ingestion frequency and if the connector is working.  
+
+Create the Datasource entity type using:
+```
+python ~/source/scripts/create_datasource_entities.py
+```
+
+* From the same `Service` tab, launch "Db2 Warehouse on Cloud" services on the Services tab. Check to see if you scripts have created the tables for your `Points` and `Datasources` Entity Types. Each entity type should also have metric and dimension tables in the Maximo Asset Monitor database to capture the PI historian points.  
 
 ![Maximo Asset Monitor Dashboard](images/MAM-DB-Dashboard-Image2.png)
 
@@ -108,7 +117,7 @@ App Connect Enterprise is used to ingest data from the OSIsoft PI data historian
 
 The messaging flow and mapping created and packaged by the toolkit will need to be deployed to a runtime instance of App Connect Enterprise. Connect your App Connect Enterprise (ACE) Developer edition toolkit to an on-premise instance or App Connect, to [App Connect on IBM Cloud](https://www.ibm.com/support/knowledgecenter/en/SSTTDS_11.0.0/com.ibm.ace.cloud.doc/index.html) or an App Connect Docker container. An App Connect Enterprise server container running on  the IBM Cloud Kubernetes service has been used in this code pattern.
 
-* Login to or create a new [IBM Clout Lite (free tier)](https://cloud.ibm.com/login) account if you do not already have one.
+* Login to or create a new [IBM Cloud Lite (free tier)](https://cloud.ibm.com/login) account if you do not already have one.
 
 * Search for and provision an instance of the [IBM Cloud Kubernetes service](https://cloud.ibm.com/catalog?category=containers#services) from the IBM Cloud service catalog.
 
@@ -129,47 +138,72 @@ ibmcloud ks cluster config --cluster <cluster id>
 kubectl config current-context  
 ```
 
-* The directory ace-pi-monitor-integration/ace in the cloned GitHub repository contains the Kubernetes deployment YAML file that creates the App Connect container. To create and start an instance of the container, navigate to the container and run the command:
+* Deploy an instance of the App Connect container by running the following command from the root directory of this project:
 ```
-kubectl create -f ./kube-config.yml
+kubectl create -f ./ace-pi-monitor-integration/ace/kube-config.yml
 ```
 
 * Once the ACE container has been deployed, you can open your ACE server by navigating to the public IP of your Kubernetes cluster and the port assigned in the Kubernetes configuration file ex. http://184.x.x.x:30007/?tab=0  (the ACE container instance has not been password protected)
 
  ![](images/ACE-Instance-Image.png)
 
- ### 6. Start by learning how to use message flows using the App Connect Database Mapping tutorial
+### 6. Start by learning how to use message flows using the App Connect Database Mapping tutorial
 
-Get a basic message flow working to create an employee table. The tutorial included with App Connect Toolkit, has you create an employees database, which the App Connect Enterprise message flows will send a Json payload message to. Using the DB2 service in Monitor, and credentials you noted earlier to access the database.   A DB userid which has the required level of DB2 administrative privileges.  Create a new example database for this tutorial named USERS:
+Get a basic message flow working to create an employee table. The tutorial included with App Connect Toolkit, has you create an employees database, which the App Connect Enterprise message flows will send a Json payload message to. Use the DB2 service provided in Maximo Monitor, and credentials you noted earlier to access the database. The DB userid will need to have administrative privileges.
 
-* Start a DB2 Command Window and execute the command:  In Mac it is a menu option on the App Connect Toolkit app menu.
+##### Create a new example database for this tutorial named "USERS"
+
+<!-- Start a DB2 Command Window
+In Mac it is a menu option on the App Connect Toolkit app menu.
+ -->
 Create table in SQL editor in DB2 Cloud.
 
-`db2 create database USERS`
+Execute the following command to create a "Users" table
 
-* Connect to the database which was just created, and create a table into which the message flow will insert data. From the same window, start an interactive command session by typing db2 and then execute these commands:
-`CONNECT TO USERS`
+```
+db2 create database USERS
+```
 
-`CREATE TABLE MYSCHEMA.EMPLOYEES (PKEY INTEGER NOT NULL, FIRSTNAME VARCHAR(30), LASTNAME VARCHAR(30), COUNTRY VARCHAR(2), PRIMARY KEY(PKEY))`
+Connect to the database which was just created, and create a table into which the message flow will insert data. From the same window, start an interactive command session by typing db2 and then execute the following commands
 
-* Create an integration node, set up your credentials, define a default policy project and then deploy by completing the following steps:
+```
+CONNECT TO USERS
 
-* Start an App Connect Enterprise command console in Mac it it is on the top left menu option.   `~your-user-id/IBM/ACET11/workspaceMonitor/`
+CREATE TABLE MYSCHEMA.EMPLOYEES (PKEY INTEGER NOT NULL, FIRSTNAME VARCHAR(30), LASTNAME VARCHAR(30), COUNTRY VARCHAR(2), PRIMARY KEY(PKEY))
+```
 
-* In `MyPolicies / Policy / USERS.policy.xml` Leave Security `DSN` `mydbidentity`
+- Create an integration node, set up your credentials, define a default policy project and then deploy by completing the following steps:
 
-* Execute the following commands:
-`mqsicreatebroker TESTNODE
+<!-- * Start an App Connect Enterprise command console in Mac it it is on the top left menu option.   `~your-user-id/IBM/ACET11/workspaceMonitor/` -->
+- Start an App Connect Enterprise command console
+![](images/open_console.png)
+
+You should then see the following screen
+![](images/console_image.png)
+
+
+<!-- * In `MyPolicies / Policy / USERS.policy.xml` Leave Security `DSN` `mydbidentity` -->
+
+Execute the following commands in the console:
+
+```
+mqsicreatebroker TESTNODE
 mqsistart TESTNODE
 mqsicreateexecutiongroup TESTNODE -e server
 mqsistop TESTNODE
-mqsisetdbparms TESTNODE -n jdbc::mydbidentity -u your_db2_userid -p your_db2_password
-mqsistart TESTNODE`
+mqsisetdbparms TESTNODE -n jdbc::mydbidentity -u <your_db2_userid> -p <your_db2_password>
+mqsistart TESTNODE
+```
 
 The above `mqsisetdbparms` command configures the runtime with the required credentials (which have been abstracted from the JDBC Provider policy using the Security identity setting) for communicating with the database.
 
 When using the mapping node with a database, the JDBCProvider policy is located by App Connect Enterprise runtime based upon the name of the physical data model file (in our example named `USERS.dbm` which is used by the Mapping node to describe the structure of the database table where data is being inserted. This policy in this example is named USERS.policyxml. It must be placed into the policy project folder, so that it can be found by the runtime.  If it is easier for you you can directly modify the xml policyxml files with the db credentials and jar files. Modified Windows `C:\ProgramData\IBM\MQSI\components\TESTNODE\servers\server\run\MyPolicies`
-The default policy project which the runtime will use is defined in the server.conf.yaml file. If you are on Windows using the default workpath location, using an integration node called `TESTNODE` which owns an integration server called server, then you will find this file at the Windows Location  `C:\Program Files\ibm\ACE\11.0.0.8\server\sample\configuration`     On mac it is in `your_user_id/aceconfig/components/TESTNODE/servers/server/`
+
+The default policy project which the runtime will use is defined in the server.conf.yaml file.
+
+If you are on Windows using the default workpath location, using an integration node called `TESTNODE` which owns an integration server called server, then you will find this file at the Windows Location  `C:\Program Files\ibm\ACE\11.0.0.8\server\sample\configuration`     
+
+On mac it is in `your_user_id/aceconfig/components/TESTNODE/servers/server/`
 
 * Remember to save the updated server.conf.yaml file and then restart your integration node.
 
@@ -200,14 +234,15 @@ InputMessage1 contains this data:
 * Create Integration Service project and put interface_schema.json in it
 
 Useful References for the above steps:
-Map Json in message flow https://www.ibm.com/support/knowledgecenter/SSTTDS_11.0.0/com.ibm.gdm.doc/sm12011_.htm
-Figure out what listener for http connect and transform to db it  is using Integration server (embedded) listeners
-https://www.ibm.com/support/knowledgecenter/SSTTDS_11.0.0/com.ibm.etools.mft.doc/bc43700_.html#bc43700___bc43700_egl
+
+- [Map Json in message flow](https://www.ibm.com/support/knowledgecenter/SSTTDS_11.0.0/com.ibm.gdm.doc/sm12011_.htm)
+
+- [Figure out what listener for http connect and transform to db it  is using Integration server embedded listeners](https://www.ibm.com/support/knowledgecenter/SSTTDS_11.0.0/com.ibm.etools.mft.doc/bc43700_.html#bc43700___bc43700_egl)
 
 
 ### 7. Update the provided App Connect application configuration to publish data to Monitor.*   
 
-You need to configure the connection and other configuration settings in this flow using the files in the `app-connect` folder or use the App Connect DatabaseMapping tutorial flow.  In both cases you will have to rebuild and deploy the mapping which is packaged as a .bar file to an App Connect Enterprise runtime.  IBM App Connect Enterprise (ACE) Developer edition is a functional version that can used by developers to evaluate and prototype integration solutions. It is available for Windows 64-bit, Linux® on x86-64, and for MacOS.  ACE is available to download without charge from https://www.ibm.com/marketing/iwm/iwm/web/dispatcher.do?source=swg-wmbfd . Install the App Connect Enterprise Toolkit by following the instructions in the [Knowledge Center](https://www.ibm.com/support/knowledgecenter/SSTTDS_11.0.0/com.ibm.etools.mft.doc/ba10630_.html) or in the [Get started with IBM App Connect Enterprise article](https://developer.ibm.com/integration/docs/app-connect-enterprise/get-started/).  
+You need to configure the connection and other configuration settings in this flow using the files in the `app-connect` folder or use the App Connect DatabaseMapping tutorial flow.  In both cases you will have to rebuild and deploy the mapping which is packaged as a .bar file to an App Connect Enterprise runtime.  IBM App Connect Enterprise (ACE) Developer edition is a functional version that can used by developers to evaluate and prototype integration solutions. It is available for Windows 64-bit, Linux® on x86-64, and for MacOS.  ACE is available to download without charge from [https://www.ibm.com/marketing/iwm/iwm/web/dispatcher.do?source=swg-wmbfd](https://www.ibm.com/marketing/iwm/iwm/web/dispatcher.do?source=swg-wmbfd). Install the App Connect Enterprise Toolkit by following the instructions in the [Knowledge Center](https://www.ibm.com/support/knowledgecenter/SSTTDS_11.0.0/com.ibm.etools.mft.doc/ba10630_.html) or in the [Get started with IBM App Connect Enterprise article](https://developer.ibm.com/integration/docs/app-connect-enterprise/get-started/).  
 
 * Launch the App Connect Developer toolkit.
 
@@ -217,7 +252,7 @@ You need to configure the connection and other configuration settings in this fl
 
 * Generate the bar file
 
-* Rebuilding the bar file with the updated *.PolicyXML files and dragging it onto your server to test locally in App Connect Toolkit.
+* Rebuilding the bar file with the updated \*.PolicyXML files and dragging it onto your server to test locally in App Connect Toolkit.
 
 * Once you have tested the message flows locally, deploy the bar file to your App Connect Enterprise Host.
 
@@ -294,10 +329,10 @@ This script fetches the latest data in the past hour (determined by the STARTTIM
 
 ### 9. *Create and view dashboard to monitor Oil Well operations in Maximo Asset Monitor*
 
-* Create an instance dashboard by importing the dashboard template json in `~maximo-asset-monitor/dasbhoards`
-*Add screen shot*
+* Create an instance dashboard by importing the dashboard template json in `./maximo-asset-monitor/dashboards`
+<!-- *Add screen shot* -->
 
-* Create a new Summary Dashboard by importing the dashboard template json in `~maximo-asset-monitor/dasbhoards`
+* Create a new Summary Dashboard by importing the dashboard template json in `./maximo-asset-monitor/dashboards`
 
 
 <!-- keep this -->
