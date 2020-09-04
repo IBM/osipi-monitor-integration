@@ -30,14 +30,14 @@ When you have completed this code pattern, you will understand how to:
 
 <!--Optionally, update this section when the video is created-->
 
-# Included Components and Technologies
+## Included Components and Technologies
 
 * [IBM Maximo Asset Monitor](https://www.ibm.com/products/ibm-maximo-asset-performance-management/asset-monitor) "Advanced  AI-powered remote asset monitoring at enterprise scale for assets and operations. Essential insights for intelligent asset maintenance and operations."
 * [IBM App Connect Enterprise V11](https://www.ibm.com/us-en/cloud/app-connect) "combines the existing, industry-trusted technologies of IBM Integration Bus with IBM App Connect Professional and with new cloud native technologies, to deliver a platform that supports the full breadth of integration needs across a modern digital enterprise."
 * [Node.js](https://nodejs.org/) is an open source, cross-platform JavaScript run-time environment that executes server-side JavaScript code.
 * [OSIsoft PI Server](https://www.OSIsoft.com/pi-system/pi-capabilities/pi-server/) a data historian server that captures and stores operation point or tag data.  
 
-# Steps
+## Steps
 
 1. [Clone the repo](#1-clone-the-repo).
 2. [Setup the OSIsoft PI Server](#2-setup-the-OSIsoft-pi-server).
