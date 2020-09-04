@@ -40,18 +40,20 @@ When you have completed this code pattern, you will understand how to:
 ## Steps
 
 1. [Clone the repo](#1-clone-the-repo).
-2. [Setup the OSIsoft PI Server](#2-setup-the-OSIsoft-pi-server).
+2. [Setup the OSIsoft PI Server](#2-setup-the-osisoft-pi-server).
 3. [Prepare Maximo Asset Monitor to receive PI point data](#3-prepare-maximo-asset-monitor-to-receive-pi-point-data).
 4. [Install the App Connect Enterprise Developer Edition Toolkit](#4-install-the-app-connect-enterprise-developer-edition-toolkit).
 5. [Setup and start an App Connect Enterprise container](#5-setup-and-start-an-app-connect-enterprise-container).
 6. [Update the App Connect application configuration and deploy to an ACE server](#6-update-the-app-connect-application-configuration-and-deploy-to-an-ace-server).
-7. [Send oil well down time data from the PI data historian to Maximo Asset Monitor](#7-send-oil-well-down-time-data-from-the-pi-data-historian-to-maximo-asset-monitor).
-8. [View oil well down time data in Maximo Asset Monitor](#8-view-oil-well-down-time-data-in-maximo-asset-monitor).
-9. [Create a dashboard to monitor oil well operations in Maximo Asset Monitor](#9-create-a-dashboard-to-monitor-oil-well-operations-in-maximo-asset-monitor).  
+7. [Update the provided App Connect application configuration to publish data to Monitor](#7-update-the-provided-app-connect-application-configuration-to-publish-data-to-monitor)
+8. [Send oil well down time data from the PI data historian to Maximo Asset Monitor](#8-send-oil-well-down-time-data-from-the-pi-data-historian-to-maximo-asset-monitor).
+9. [View oil well down time data in Maximo Asset Monitor](#9-view-oil-well-down-time-data-in-maximo-asset-monitor).
+10. [Create a dashboard to monitor oil well operations in Maximo Asset Monitor](#10-create-a-dashboard-to-monitor-oil-well-operations-in-maximo-asset-monitor).  
 
 ### 1. Clone the repo
 
-Clone the `maximo-monitor-osipi-integration` in the destination of your choice. In a terminal, run:
+Clone the `maximo-monitor-osipi-integration` repository to the destination of your choice.  
+In a terminal window, run:
 
 ```
 git clone https://github.com/IBM/maximo-monitor-osipi-integration.git
@@ -149,7 +151,9 @@ kubectl create -f ./ace-pi-monitor-integration/ace/kube-config.yml
 
  ![](images/ACE-Instance-Image.png)
 
-### 6. Start by learning how to use message flows using the App Connect Database Mapping tutorial
+### 6. Update the App Connect application configuration and deploy to an ACE server
+
+#### Start by learning how to use message flows using the App Connect Database Mapping tutorial
 
 Get a basic message flow working to create an employee table. The tutorial included with App Connect Toolkit, has you create an employees database, which the App Connect Enterprise message flows will send a Json payload message to. Use the DB2 service provided in Maximo Monitor, and credentials you noted earlier to access the database. The DB userid will need to have administrative privileges.
 
@@ -242,7 +246,7 @@ Useful References for the above steps:
 - [Figure out what listener for http connect and transform to db it  is using Integration server embedded listeners](https://www.ibm.com/support/knowledgecenter/SSTTDS_11.0.0/com.ibm.etools.mft.doc/bc43700_.html#bc43700___bc43700_egl)
 
 
-### 7. Update the provided App Connect application configuration to publish data to Monitor.*   
+### 7. Update the provided App Connect application configuration to publish data to Monitor.   
 
 You need to configure the connection and other configuration settings in this flow using the files in the `app-connect` folder or use the App Connect DatabaseMapping tutorial flow.  In both cases you will have to rebuild and deploy the mapping which is packaged as a .bar file to an App Connect Enterprise runtime.  IBM App Connect Enterprise (ACE) Developer edition is a functional version that can used by developers to evaluate and prototype integration solutions. It is available for Windows 64-bit, Linux® on x86-64, and for MacOS.  ACE is available to download without charge from [https://www.ibm.com/marketing/iwm/iwm/web/dispatcher.do?source=swg-wmbfd](https://www.ibm.com/marketing/iwm/iwm/web/dispatcher.do?source=swg-wmbfd). Install the App Connect Enterprise Toolkit by following the instructions in the [Knowledge Center](https://www.ibm.com/support/knowledgecenter/SSTTDS_11.0.0/com.ibm.etools.mft.doc/ba10630_.html) or in the [Get started with IBM App Connect Enterprise article](https://developer.ibm.com/integration/docs/app-connect-enterprise/get-started/).  
 
@@ -306,7 +310,7 @@ This script fetches the latest data in the past hour (determined by the STARTTIM
  ![](images/PIWebAPIClient-Schedule.png)  
 
 
-### 8. *View oil well down time data in Maximo Asset Monitor*  
+### 9. View oil well down time data in Maximo Asset Monitor  
 
 * Login to your instance of Maximo Asset Monitor and click on the Monitor tab. Here you can see all of the entity types created.
 
@@ -329,7 +333,7 @@ This script fetches the latest data in the past hour (determined by the STARTTIM
  ![](images/MaximoMonitor-POINT-EntityType-Data.png)  
 
 
-### 9. *Create and view dashboard to monitor Oil Well operations in Maximo Asset Monitor*
+### 10. Create a dashboard to monitor oil well operations in Maximo Asset Monitor.
 
 * Create an instance dashboard by importing the dashboard template json in `./maximo-asset-monitor/dashboards`
 <!-- *Add screen shot* -->
