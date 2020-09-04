@@ -60,13 +60,14 @@ git clone https://github.com/IBM/maximo-monitor-osipi-integration.git
 ### 2. Setup the OSIsoft PI Server
 
 You will need to have an environment with the OSIsoft PI Server and dependent components like a MS SQL Enterprise database management system installed. For this code pattern a simple [PI Server deployment](https://livelibrary.OSIsoft.com/LiveLibrary/web/pub.xql?c=t&action=home&pub=server-v14&lang=en#addHistory=true&filename=GUID-FC32B910-AD95-40B3-87E0-790D4EA0F7FF.xml&docid=GUID-541BD702-45B5-4B3A-8D4B-73776F60A6B5&inner_id=&tid=&query=&scope=&resource=&toc=false&eventType=lcContent.loadDocGUID-541BD702-45B5-4B3A-8D4B-73776F60A6B5) with all PI Server components installed on the same physical Windows machine is sufficient. You will need to install the following [PI Server](https://livelibrary.OSIsoft.com/LiveLibrary/web/pub.xql?c=t&action=home&pub=server-v14&lang=en) components by using the installers and following the default install prompts (remember to point to the MS SQL database):
-    * OSIsoft Prerequisites Kit - Standalone version
-    * PI Interface Configuration Utility (ICU) Install Kit
-    * PI Server 2018 SP3 Patch 1 Installation Kit
-    * PI SDK 2018 SP1 Patch 1
-    * PI System Management Tools (PI SMT) Installation Kit 2018 SP3 Patch 1
-    * [PI SQL Data Access Server via PI Asset Framework (AF) Client 2018 SP3 Patch 2](https://livelibrary.OSIsoft.com/LiveLibrary/web/pub.xql?action=publist_home&_ga=2.262148874.767846259.1592060213-894486930.1585751141&pub_category=PI-SQL-Data-Access-Server-(PI-Integrators))
-    * [PI Web API](https://livelibrary.OSIsoft.com/LiveLibrary/web/pub.xql?c=t&action=home&pub=web-api-v13&lang=en)
+
+ * OSIsoft Prerequisites Kit - Standalone version
+ * PI Interface Configuration Utility (ICU) Install Kit
+ * PI Server 2018 SP3 Patch 1 Installation Kit
+ * PI SDK 2018 SP1 Patch 1
+ * PI System Management Tools (PI SMT) Installation Kit 2018 SP3 Patch 1
+ * [PI SQL Data Access Server via PI Asset Framework (AF) Client 2018 SP3 Patch 2](https://livelibrary.OSIsoft.com/LiveLibrary/web/pub.xql?action=publist_home&_ga=2.262148874.767846259.1592060213-894486930.1585751141&pub_category=PI-SQL-Data-Access-Server-(PI-Integrators))
+ * [PI Web API](https://livelibrary.OSIsoft.com/LiveLibrary/web/pub.xql?c=t&action=home&pub=web-api-v13&lang=en)
 
 * For the purpose of this code pattern we will be using simulated oil well drilling equipment downtime data. OSIsoft provides an asset-based example starter kit with simulated data that you will need to install. Download the kit [here](https://pisquare.OSIsoft.com/community/all-things-pi/af-library/asset-based-pi-example-kits/well-downtime-kit) and following the install instructions in the included install guide.  
 
@@ -112,6 +113,7 @@ App Connect Enterprise is used to ingest data from the OSIsoft PI data historian
 
 ![](images/ACE-Flow-Image.png)
 
+Download and install the IBM App Connect Enterprise for Developers for Windows, MacOS or Linux from [here](https://www.ibm.com/account/reg/signup?formid=urx-32125)
 
 ### 5. Setup and start an App Connect Enterprise container
 
